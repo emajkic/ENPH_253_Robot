@@ -1,16 +1,10 @@
 #include <Arduino.h>
-// #include "Constants.h"
+#include "Constants.h"
 #include "MyServo.h"
-// #include "PinSetup.h"
+#include "PinSetup.h"
 
-// ADD THE LIBRARIES ABOVE FROM GIT--> UNTIL THEN TEMP DEFS ARE HERE: add to constants/pin setup
-const int pwmChannelC1 = 4;
-const int pwmChannelC2 = 5;
-const int pwmChannelLL = 6;
-const int pwmChannelLR = 7;
 const int servoFreq = 50;      // 50 Hz = 20 ms period (standard for servos)
 const int servoResolution = 16; // 16-bit resolution (0–65535)
-
 
 /*
 * Class constructor
