@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include "driver/ledc.h"
+
 #include "Constants.h"
 #include "Motor.h"
 #include "PinSetup.h"
@@ -55,10 +57,12 @@ void Motor::stop() {
 /*
 * Set speed of motor 
 * 
-* @param speed         speed to set the motor; int. between 0-4095
+* @param speed         speed to set the motor; fraction between 0-1
 * @param direction     direction to spin with set speed
 */
 void Motor::setSpeed(int speed, Direction direction) {
+    //double s = speed * 4095;
+    
     switch (direction)
     {
     case Direction::FORWARD:

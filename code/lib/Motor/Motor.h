@@ -2,7 +2,6 @@
 #define Motor_h
 
 #include <Arduino.h>
-#include <cmath>
 
 enum class Direction {
     FORWARD,
@@ -16,6 +15,8 @@ enum class Side {
 
 class Motor {
     public:
+        int speed;
+
        /*
        * Class constructor
        */
@@ -29,7 +30,7 @@ class Motor {
        /*
        * Set speed of motor 
        * 
-       * @param speed         speed to set the motor; int. between 0-4095
+       * @param speed         speed to set the motor; fraction between 0-1
        * @param direction     direction to spin with set speed
        */
        void setSpeed(int speed, Direction direction);
@@ -44,7 +45,6 @@ class Motor {
         Direction spinDir;
         int pinF; // Forward pin
         int pinB; // Backward pin
-        int speed;
         Side side;
 };
 
