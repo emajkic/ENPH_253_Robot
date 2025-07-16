@@ -4,6 +4,11 @@
 #include <Arduino.h>
 #include <cmath>
 
+const int pwmChannelC1 = 4;
+const int pwmChannelC2 = 5;
+const int pwmChannelLL = 6;
+const int pwmChannelLR = 7; //move to Constants.cpps
+
 enum class Name { // do something here for the PWM channel? 
     CLAW1,
     CLAW2, 
