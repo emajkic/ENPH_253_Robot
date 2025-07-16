@@ -1,35 +1,24 @@
 #include <Arduino.h>
+#include "driver/ledc.h"
+#include "driver/adc.h"
+
 #include "Constants.h"
 #include "PinSetup.h"
 #include "Motor.h"
 #include "PID.h"
 
-PID::PID(PIDType pidType, Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor(rightMotor) { //Should we rename these to pinCCW and pinCW s.t. know which is which
-    switch (pidType)
-    {
-    case PIDType::LineFollower:
-        this->KP = KP_LINE_FOLLOWER;
-        this->KI = KI_LINE_FOLLOWER;
-        this->KD = KD_LINE_FOLLOWER;
-        break;
-    case PIDType::CompassFollower:
-        this->KP = KP_COMPASS_FOLLOWER;
-        this->KI = KI_COMPASS_FOLLOWER;
-        this->KD = KD_COMPASS_FOLLOWER;        
-        break;
-    default:
-        break;
-    } 
+PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor(rightMotor) { //Should we rename these to pinCCW and pinCW s.t. know which is which
+    this->KP = KP_LINE_FOLLOWER;
+    this->KI = KI_LINE_FOLLOWER;
+    this->KD = KD_LINE_FOLLOWER;
 
     this->error = 0;
     this->lastError = 0;
     this->lastDifferentError = 0;
 
-    this->pidType = pidType;
-
     this->lastTime = 0;
     this->timeOfLastChange = 0;
-
+    
     pinMode(LEFT_QRD_PIN, INPUT);
     pinMode(RIGHT_QRD_PIN, INPUT);
 }
@@ -38,60 +27,74 @@ PID::PID(PIDType pidType, Motor &leftMotor, Motor &rightMotor) : leftMotor(leftM
 * Use PID control loop
 */
 void PID::usePID() {
-    // Only implement PD control for now (assume KP will = 0)
-    switch (pidType)
-    {
-    case PIDType::LineFollower:
-        doPIDLine();
-        break;
-    case PIDType::CompassFollower:
-        doPIDCompass();
-        break;
-    default:
-        break;
-    } 
+    consts(); // FOR TESTING ONLY
+    doPIDLine();
+}
+
+// DELETE FOR TESTING ONLY ----------------------------------------- //
+void PID::consts() {
+    adc1_config_width(ADC_WIDTH_12Bit);
+    adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_12); // GPIO 35
+    adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_12); // GPIO 34
+    
+    this->KP = adc1_get_raw(ADC1_CHANNEL_7);
+    this->KD = adc1_get_raw(ADC1_CHANNEL_6);
+}
+
+/*
+* Set PID error to 0
+*/
+void PID::resetPID() {
+    this->error = 0;
+    this->lastDifferentError = 0;
+    this->lastError = 0;
 }
 
 void PID::doPIDLine() {
     this->error = getErrorLine();
 
-    int prevLeftSpeed = leftMotor.getSpeed();
-    int prevRightSpeed = rightMotor.getSpeed();
+    // int leftPrevSpeed = this->leftMotor.getSpeed();
+    // int rightPrevSpeed = this->rightMotor.getSpeed();
 
-    //implement I control if needed
+    unsigned long currentTime = micros();
+    unsigned long deltaTime;
 
     double derivativeError;
 
-    if (lastError != error) {
-        unsigned long deltaTime = micros() - lastTime;
+    if (error != lastError) {
+        deltaTime = currentTime - lastTime;
         if (deltaTime == 0) deltaTime = 1;
-        derivativeError = (error - lastError) / static_cast<double>(deltaTime);
+
+        derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
 
         lastDifferentError = error;
-        timeOfLastChange = lastTime; 
+        timeOfLastChange = currentTime;
     } else {
-        derivativeError = (error - lastError) / (micros() - timeOfLastChange);
+        deltaTime = currentTime - timeOfLastChange;
+        if (deltaTime == 0) deltaTime = 1;
+
+        derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
     }
 
     lastError = error;
-    lastTime = micros();
+    lastTime = currentTime;
 
     // Adjustements
-    double adjustement = (this->KP * error) + (this->KD * derivativeError);
+    double adjustement = ((this->KP * error) + (this->KD * derivativeError));
     
-    int newLeftSpeed = prevLeftSpeed - adjustement;
-    int newRightSpeed = prevRightSpeed + adjustement;
+    int newLeftSpeed = BASE_SPEED_L - adjustement;
+    int newRightSpeed = BASE_SPEED_R + adjustement;
 
-    newLeftSpeed = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);
-    newRightSpeed = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);
+    int newLeftSpeedCon = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);
+    int newRightSpeedCon = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);
 
-    leftMotor.setSpeed(newLeftSpeed, Direction::FORWARD);
-    rightMotor.setSpeed(newRightSpeed, Direction::FORWARD);
+    leftMotor.setSpeed(newLeftSpeedCon, Direction::FORWARD);
+    rightMotor.setSpeed(newRightSpeedCon, Direction::FORWARD);
+
+    // Update object properties
+    leftMotor.speed = newLeftSpeed;
+    rightMotor.speed = newRightSpeed;
 }   
-
-void PID::doPIDCompass() {
-    // TODO: Implement3
-}
 
 int PID::getErrorLine() {
     int leftReading = digitalRead(LEFT_QRD_PIN);
@@ -99,13 +102,13 @@ int PID::getErrorLine() {
 
     int err = 0;
 
-    if (leftReading == BLACK && rightReading == BLACK) { //Threshold set by hardware (comparator)
+    if (leftReading == LINE_BLACK && rightReading == LINE_BLACK) { //Threshold set by hardware (comparator)
         err = 0;
-    } else if (leftReading == BLACK && rightReading == WHITE) {
+    } else if (leftReading == LINE_BLACK && rightReading == LINE_WHITE) {
         err = 1;
-    } else if (leftReading == WHITE && rightReading == BLACK) {
+    } else if (leftReading == LINE_WHITE && rightReading == LINE_BLACK) {
         err = -1;
-    } else if (leftReading == WHITE && rightReading == WHITE) {
+    } else if (leftReading == LINE_WHITE && rightReading == LINE_WHITE) {
         if (lastError > 0) {
             err = 5;
         } else if (lastError <= 0) { //TODO: CHECK THIS -> WHAT IF LASTERR = 0
@@ -114,9 +117,4 @@ int PID::getErrorLine() {
     }
 
     return err;
-}
-
-int PID::getErrorCompass () {
-    // TODO: Implement
-    return 0;
 }

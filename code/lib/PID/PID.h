@@ -2,7 +2,6 @@
 #define PID_h
 
 #include <Arduino.h>
-#include <cmath>
 #include "Motor.h"
 
 enum class PIDType {
@@ -28,13 +27,6 @@ class PID {
         void resetPID();
 
         /*
-        * Check if both sensors on white
-        *
-        * @return true if both sensors are on white
-        */
-        bool bothOnWhite();
-
-        /*
         * Setters and Getters
         */
         void setKP(int KP) { this->KP = KP; }
@@ -44,10 +36,10 @@ class PID {
         int getKP() { return this->KP; }
         int getKI() { return this->KI; }
         int getKD() { return this->KD; }
+        int getError() { return this->error; }
 
-        int getErrorLine(); 
-
-       //ADD WAY MORE AS NEEDED, + THINGS RELATED TO SPEED
+        //ADD WAY MORE AS NEEDED, + THINGS RELATED TO SPEED
+        void consts(); // FOR TESTING -----------------------
 
     private:
         PIDType pidType;
@@ -68,7 +60,7 @@ class PID {
         void doPIDLine();
         void doPIDCompass();
 
-        //int getErrorLine(); MOVED UP FOR TEST
+        int getErrorLine(); 
         int getErrorCompass();
 };
 
