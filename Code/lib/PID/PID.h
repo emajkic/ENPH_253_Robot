@@ -2,20 +2,14 @@
 #define PID_h
 
 #include <Arduino.h>
-#include <cmath>
 #include "Motor.h"
-
-enum class PIDType {
-    LineFollower,
-    CompassFollower
-};
 
 class PID {
     public:
         /*
         * Class Constructor
         */
-        PID(PIDType pidType, Motor &leftMotor, Motor &rightMotor); //add more param once figured out
+        PID(Motor &leftMotor, Motor &rightMotor); //add more param once figured out
 
         /*
         * Use PID control loop
@@ -28,13 +22,6 @@ class PID {
         void resetPID();
 
         /*
-        * Check if both sensors on white
-        *
-        * @return true if both sensors are on white
-        */
-        bool bothOnWhite();
-
-        /*
         * Setters and Getters
         */
         void setKP(int KP) { this->KP = KP; }
@@ -44,13 +31,12 @@ class PID {
         int getKP() { return this->KP; }
         int getKI() { return this->KI; }
         int getKD() { return this->KD; }
+        int getError() { return this->error; }
 
-        int getErrorLine(); 
-
-       //ADD WAY MORE AS NEEDED, + THINGS RELATED TO SPEED
+        //ADD WAY MORE AS NEEDED, + THINGS RELATED TO SPEED
+        void consts(); // FOR TESTING -----------------------
 
     private:
-        PIDType pidType;
         int KP;
         int KD;
         int KI;
@@ -66,10 +52,7 @@ class PID {
         Motor &rightMotor;
 
         void doPIDLine();
-        void doPIDCompass();
-
-        //int getErrorLine(); MOVED UP FOR TEST
-        int getErrorCompass();
+        int getErrorLine(); 
 };
 
 #endif

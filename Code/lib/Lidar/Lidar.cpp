@@ -1,15 +1,12 @@
 #include <Arduino.h>
 #include <VL53L1X.h>
 #include <Wire.h>
-
-#include <ServoESP.h>
-#include "Lidar.h"
-
-#include <stdexcept>  // for std::runtime_error
 #include <map> // Required header for std::map
 
-// #include "Constants.h"
-// #include "PinSetup.h"
+#include "ServoESP.h"
+#include "Lidar.h"
+#include "Constants.h"
+#include "PinSetup.h"
 
 unsigned long timeout = 1000;   // val in ms (check this)
 unsigned long timeoutLidar = 1000; 
@@ -98,3 +95,4 @@ uint16_t Lidar::singleMeasurement()
 
     return sensor.read(false); // return value
 }
+
