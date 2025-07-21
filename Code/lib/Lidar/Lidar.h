@@ -12,7 +12,7 @@
 class Lidar
 {
 public:
-    Lidar(int sclPin, int sdaPin, ServoESP& servo);
+    Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP &servo);
     
     /*
     * Initializes LiDAR sensor by starting I2C communication
@@ -31,6 +31,7 @@ private:
     ServoESP &servo;
     int sclPin;
     int sdaPin; // these are i2c enabled pins for communicating with the LiDAR
+    int xshutPin;
 
     uint16_t singleMeasurement(); 
 

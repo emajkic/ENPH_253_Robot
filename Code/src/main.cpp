@@ -18,8 +18,8 @@ PID pid(motorL, motorR);
 ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 0); //CHANGE CHASSIS_ZERO
 ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 0);
 
-Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, servoLidarLeft);
-Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, servoLidarRight);
+Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
+Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 
 Diagnostics diagnostics;
 Utils utils;
