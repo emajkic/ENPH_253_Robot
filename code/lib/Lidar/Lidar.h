@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <ServoESP.h>
 #include <VL53L1X.h>
-#include <cmath>
 
 // Data structure inclusions: 
 #include <map> // Required header for std::map
@@ -26,15 +25,16 @@ public:
      */
     bool stop();
 
-    // add continuous reading
+    /*
+    * 
+    */
+    bool initialiseLidar();
 
 private:
     VL53L1X sensor;
     ServoESP &servo;
     int sclPin;
     int sdaPin; // these are i2c enabled pins for communicating with the LiDAR
-
-    bool initialiseLidar();
 
     uint16_t singleMeasurement(); 
 };
