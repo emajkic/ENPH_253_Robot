@@ -61,7 +61,6 @@ bool Lidar::initialiseLidar()
     pinMode(xshutPin, INPUT);
     delay(10);  // Let sensor boot
 
-    Wire.begin(sdaPin, sclPin);
     sensor.setTimeout(200);
 
     unsigned long start = millis();

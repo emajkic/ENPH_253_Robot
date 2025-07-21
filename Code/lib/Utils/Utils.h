@@ -12,9 +12,6 @@ class Utils {
         * Call pinMode for all pins defined in PinSetup.h
         */
         void initializePins();
-
-    private:
-        void initLidar();
 };
 
 #endif 
