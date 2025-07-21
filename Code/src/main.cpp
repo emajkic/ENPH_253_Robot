@@ -1,27 +1,41 @@
 #include <Arduino.h>
 
+#include "Claw.h"
 #include "Constants.h"
-#include "PinSetup.h"
+#include "Diagnostics.h"
+#include "Lidar.h"
 #include "Motor.h"
 #include "PID.h"
-#include "Diagnostics.h"
+#include "PinSetup.h"
+#include "ServoESP.h"
+#include "Utils.h"
 
+// OBJECT CREATION //
 Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); //forward, backward
 Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); //forward, backward
-
 PID pid(motorL, motorR);
 
-// Diagnostics diagnostics;
+ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 0); //CHANGE CHASSIS_ZERO
+ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 0);
+
+Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, servoLidarLeft);
+Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, servoLidarRight);
+
+Diagnostics diagnostics;
+Utils utils;
 
 void setup() {
-    motorL.setSpeed(BASE_SPEED_L, Direction::FORWARD);
-    motorR.setSpeed(BASE_SPEED_R, Direction::FORWARD);
+    // INITIALIZATION //
+    utils.beginWire();
+    utils.initializePins();
 
-    // diagnostics.init();
+    lidarLeft.initialiseLidar();
+    lidarRight.initialiseLidar();
+
+    diagnostics.init();
 }
 
+//DO not use Serial in final robot -> UART pins used for reflectance
 void loop() { 
-    pid.usePID();
-    //diagnostics.runSimple();
 }
 
