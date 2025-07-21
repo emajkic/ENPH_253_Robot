@@ -12,20 +12,11 @@ unsigned long timeout = 1000;   // val in ms (check this)
 unsigned long timeoutLidar = 1000; 
 const int angularStep = 1; // val in degrees
 
-Lidar::Lidar(int sclPin, int sdaPin, ServoESP &servo) : sclPin(sclPin), sdaPin(sdaPin), servo(servo)
+Lidar::Lidar(int sdaPin, int sclPin, ServoESP &servo) : sclPin(sclPin), sdaPin(sdaPin), servo(servo)
 { 
     // servo obj initialisation
     servo.attach();
-
-    servo.moveServo(0); 
-
-    // lidar initialisation
-    bool initialisationSuccess = initialiseLidar();
-
-    if (!initialisationSuccess)
-    {
-        Serial.println("Failed to connect!"); 
-    }
+    //servo.moveServo(0); 
 }
 
 /*
@@ -46,7 +37,7 @@ std::map<int, uint16_t> Lidar::sweepReading(int endAngle)
         readings.insert({angle, reading});
     }
 
-    //servo.moveServo(0); 
+   //servo.moveServo(0); 
 
     return readings; 
 }
@@ -64,9 +55,6 @@ bool Lidar::stop() {
 /* returns false if timed out */
 bool Lidar::initialiseLidar()
 {
-    Wire.begin(this->sdaPin, this->sclPin);
-    Wire.setClock(400000); // use 400 kHz I2C
-
     unsigned long start = millis(); 
 
     sensor.setTimeout(200); // setting to min timeout for short mode; not giving us the ability to use any others bc its the most resistant to ambient light AND it has a 1.3m sensing range, which is more than enough
@@ -107,3 +95,4 @@ uint16_t Lidar::singleMeasurement()
 
     return sensor.read(false); // return value
 }
+
