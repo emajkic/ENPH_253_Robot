@@ -19,9 +19,12 @@ const int SCL_LIDAR= 22;
 const int SDA_EXTRA = 37; // OLED, Sonar: 37, 38
 const int SCL_EXTRA = 38;
 
-// Lidar addresses //
-const int XSHUT_PIN_LEFT = 7;
-const int XSHUT_PIN_RIGHT = 8;
+// Lidar //
+const int XSHUT_PIN_LEFT = 8;
+const int XSHUT_PIN_RIGHT = 7;
+
+const int SERVO_LIDAR_LEFT_PIN = 9;
+const int SERVO_LIDAR_RIGHT_PIN = 10;
 
 // Reflectance Circuit //
 const int QRD_PIN_LEFT = 3;
@@ -43,8 +46,9 @@ const int ROTARY_IN_CLK_PIN = 36;
 const int ROTARY_IN_DT_PIN = 39;
 const int CLAW_HOME_SWITCH_PIN = 15;
 
-const int CLAMP_MOTOR_PIN = 4;
-const int ROTARY_MOTOR_PIN = 2;
+const int ROTARY_MOTOR_PIN = 14;
+const int CLAMP_MOTOR_FORW_PIN = 4;
+const int CLAMP_MOTOR_BACK_PIN = 2;
 
 // Basket //
 const int BASKET_SWITCH_PIN = 20;

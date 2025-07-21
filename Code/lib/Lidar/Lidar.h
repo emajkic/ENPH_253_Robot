@@ -2,21 +2,22 @@
 #define LIDAR_H
 
 #include <Arduino.h>
-#include <ServoESP.h>
 #include <VL53L1X.h>
-
-// Data structure inclusions: 
 #include <map> // Required header for std::map
+
+#include "ServoESP.h"
+#include "Constants.h"
+#include "PinSetup.h"
 
 class Lidar
 {
 public:
     Lidar(int sclPin, int sdaPin, ServoESP& servo);
-
+    
     /*
-     * Obtain distance reading array --> this should spin the servo
-     */
-    std::map<int, uint16_t> sweepReading(int endAngle);
+    * Initializes LiDAR sensor by starting I2C communication
+    */
+    bool initialiseLidar();
 
     /*
      * Stops measurements and the servos motion
@@ -25,11 +26,6 @@ public:
      */
     bool stop();
 
-    /*
-    * 
-    */
-    bool initialiseLidar();
-
 private:
     VL53L1X sensor;
     ServoESP &servo;
@@ -37,6 +33,11 @@ private:
     int sdaPin; // these are i2c enabled pins for communicating with the LiDAR
 
     uint16_t singleMeasurement(); 
+
+    /*
+     * Obtain distance reading array --> this should spin the servo
+     */
+    std::map<int, uint16_t> sweepReading(int endAngle);
 };
 
 #endif

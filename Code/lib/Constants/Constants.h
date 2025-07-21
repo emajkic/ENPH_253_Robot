@@ -31,4 +31,6 @@ const int l2 = 19; // [cm] these are not final ******************************** 
 const double alphaO = 1.68879093374; // angle of arm controlled by servo 1 relative to the horizontal [rad]
 const double betaO = 0.942477796077;
 
+const double HALL_BASE_SIGNAL = 1.6; //[V]
+
 #endif
