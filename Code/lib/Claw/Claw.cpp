@@ -80,21 +80,22 @@ void Claw::unclamp(){
 /*
  * returns map with alpha and beta to move the servos to in degrees; alpha and beta are both between 0 and 90 degrees
  */
-std::map<std::string, int> Claw::getAngles(int x, int y){
-    
-    std::map<std::string, int> angles; 
-    
-    double l = sqrt(l1*l1+l2*l2); 
+std::map<std::string, double> getAngles(int x, int y)
+{
 
-    double phi1 = atan(y/x)+acos((l2*l2-l1*l1-l*l)/(-2*l1*l)); 
-    double phi2 = acos((l*l-l2*l2-l1*l1)/(-2*l2*l1)); 
+  std::map<std::string, double> angles;
 
-    double alpha = -(phi1-alphaO); 
-    double beta = phi2-betaO; 
+  double m = static_cast<double>(x);
+  double n = static_cast<double>(y);
+  double l = sqrt(m * m + n * n);
 
-    angles.insert({"alpha", alpha}); 
-    angles.insert({"beta", beta}); 
+  double alpha_rad = -(atan2(n,m) + acos((l2 * l2 - l1 * l1 - l * l) / (-2.0 * l1 * l))) + alphaO;
+  double beta_rad = acos((l * l - l2 * l2 - l1 * l1) / (-2.0 * l2 * l1)) - betaO;
 
+  angles["alpha"] = alpha_rad * 180.0 / PI;
+  angles["beta"] = beta_rad * 180.0 / PI;
+
+  return angles;
 }
 
 void moveTheta(){

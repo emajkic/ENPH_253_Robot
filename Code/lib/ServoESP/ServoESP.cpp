@@ -4,12 +4,15 @@
 #include "Constants.h"
 #include "PinSetup.h"
 
-ServoESP::ServoESP(int servoPin, Name name)
+ServoESP::ServoESP(int servoPin, Name name, int chassisZero)
 {
     this->servoPin = servoPin;
     this->name = name;
+    this->chassisZero = chassisZero; 
+
     this->attached = false;
-    this->angle = 0; 
+    this->absoluteAngle = 0; 
+    this->relativeAngle = -chassisZero; // talk abt 
 }
 
 /*
@@ -69,8 +72,7 @@ boolean ServoESP::detach()
 }
 
 /*
- * Move servo to specified angle
- *
+ * Move servo to specified angle 
  * @param angle    angle to set the motor; int. between 0-180
  */
 void ServoESP::moveServo(int angle)
@@ -88,13 +90,30 @@ void ServoESP::moveServo(int angle)
 
     ledcWrite(this->pwmChannel, duty);
 
-    this->angle = angle;
+    this->absoluteAngle = angle;
+    this->relativeAngle = angle - chassisZero; 
+}
+
+/*
+ * Move servo to specified angle relative to the chassis 0 (the angle parallel to the axis, pointing to the front of the robot)
+ *
+ * @param angle    angle to set the motor; int. between 0 -> (180 - chassisZero)
+ */
+void ServoESP::moveServoChassis(int angle)
+{
+    int actualAngle = angle + chassisZero; 
+    moveServo(actualAngle); 
 }
 
 /*
  * Getters
  */
-int ServoESP::getAngle()
+int ServoESP::getAbsoluteAngle()
 {
-    return this->angle;
+    return this->absoluteAngle;
+}
+
+int ServoESP::getRelativeAngle()
+{
+    return this->relativeAngle;
 }
