@@ -16,12 +16,8 @@ const int KP_LINE_FOLLOWER = 55;
 const int KI_LINE_FOLLOWER = 0;
 const int KD_LINE_FOLLOWER = 0;
 
-const int KP_COMPASS_FOLLOWER = 0;
-const int KI_COMPASS_FOLLOWER = 0;
-const int KD_COMPASS_FOLLOWER = 0;
-
-// Magnetometer //
-const int REF_ANGLE_DEBRIS_1 = 45; // Change names to describe debris
-const int REF_ANGLE_DEBRIS_2 = 45;
+// ServoESP //
+const int servoFreq = 50;       // 50 Hz = 20 ms period (standard for servos)
+const int servoResolution = 12; // 12-bit resolution (0–4096)
 
 #endif

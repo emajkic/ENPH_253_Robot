@@ -6,6 +6,7 @@
 #include "PinSetup.h"
 #include "Motor.h"
 #include "PID.h"
+#include "Utils.h"
 
 PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor(rightMotor) { //Should we rename these to pinCCW and pinCW s.t. know which is which
     this->KP = KP_LINE_FOLLOWER;
@@ -18,9 +19,6 @@ PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor
 
     this->lastTime = 0;
     this->timeOfLastChange = 0;
-    
-    pinMode(LEFT_QRD_PIN, INPUT);
-    pinMode(RIGHT_QRD_PIN, INPUT);
 }
 
 /*
@@ -29,16 +27,6 @@ PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor
 void PID::usePID() {
     consts(); // FOR TESTING ONLY
     doPIDLine();
-}
-
-// DELETE FOR TESTING ONLY ----------------------------------------- //
-void PID::consts() {
-    adc1_config_width(ADC_WIDTH_12Bit);
-    adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_12); // GPIO 35
-    adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_12); // GPIO 34
-    
-    this->KP = adc1_get_raw(ADC1_CHANNEL_7);
-    this->KD = adc1_get_raw(ADC1_CHANNEL_6);
 }
 
 /*
@@ -97,8 +85,8 @@ void PID::doPIDLine() {
 }   
 
 int PID::getErrorLine() {
-    int leftReading = digitalRead(LEFT_QRD_PIN);
-    int rightReading = digitalRead(RIGHT_QRD_PIN);
+    int leftReading = digitalRead(QRD_PIN_LEFT);
+    int rightReading = digitalRead(QRD_PIN_RIGHT);
 
     int err = 0;
 
@@ -117,4 +105,14 @@ int PID::getErrorLine() {
     }
 
     return err;
+}
+
+// FOR TESTING ONLY //
+void PID::consts() {
+    adc1_config_width(ADC_WIDTH_12Bit);
+    adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_12); // GPIO 35
+    adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_12); // GPIO 34
+    
+    this->KP = adc1_get_raw(ADC1_CHANNEL_7);
+    this->KD = adc1_get_raw(ADC1_CHANNEL_6);
 }

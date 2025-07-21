@@ -4,17 +4,12 @@
 #include <Arduino.h>
 #include "Motor.h"
 
-enum class PIDType {
-    LineFollower,
-    CompassFollower
-};
-
 class PID {
     public:
         /*
         * Class Constructor
         */
-        PID(PIDType pidType, Motor &leftMotor, Motor &rightMotor); //add more param once figured out
+        PID(Motor &leftMotor, Motor &rightMotor); //add more param once figured out
 
         /*
         * Use PID control loop
@@ -42,7 +37,6 @@ class PID {
         void consts(); // FOR TESTING -----------------------
 
     private:
-        PIDType pidType;
         int KP;
         int KD;
         int KI;
@@ -58,10 +52,7 @@ class PID {
         Motor &rightMotor;
 
         void doPIDLine();
-        void doPIDCompass();
-
         int getErrorLine(); 
-        int getErrorCompass();
 };
 
 #endif

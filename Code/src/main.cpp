@@ -4,13 +4,12 @@
 #include "PinSetup.h"
 #include "Motor.h"
 #include "PID.h"
-#include "Compass.h"
 #include "Diagnostics.h"
 
 Motor motorL(2, 4, Side::LEFT); //forward, backward
 Motor motorR(26, 25, Side::RIGHT); //forward, backward
 
-PID pid(PIDType::LineFollower, motorL, motorR);
+PID pid(motorL, motorR);
 
 // Diagnostics diagnostics;
 

@@ -1,17 +1,8 @@
 #include <Arduino.h>
-// #include "Constants.h"
+
 #include "ServoESP.h"
-// #include "PinSetup.h"
-#include <stdexcept>
-
-// ADD THE LIBRARIES ABOVE FROM GIT--> UNTIL THEN TEMP DEFS ARE HERE: add to constants/pin setup
-const int pwmChannelC1 = 4;
-const int pwmChannelC2 = 5;
-const int pwmChannelLL = 6;
-const int pwmChannelLR = 7;
-
-const int servoFreq = 50;       // 50 Hz = 20 ms period (standard for servos)
-const int servoResolution = 12; // 12-bit resolution (0–4096)
+#include "Constants.h"
+#include "PinSetup.h"
 
 ServoESP::ServoESP(int servoPin, Name name)
 {
