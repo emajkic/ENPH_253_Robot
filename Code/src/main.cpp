@@ -6,8 +6,8 @@
 #include "PID.h"
 #include "Diagnostics.h"
 
-Motor motorL(2, 4, Side::LEFT); //forward, backward
-Motor motorR(26, 25, Side::RIGHT); //forward, backward
+Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); //forward, backward
+Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); //forward, backward
 
 PID pid(motorL, motorR);
 
@@ -22,22 +22,6 @@ void setup() {
 
 void loop() { 
     pid.usePID();
-    // int leftReading = digitalRead(12);
-    // int rightReading = digitalRead(14);
-
-    // if (count = 2000) {
-    //     // Serial.print("Error: ");
-    //     // Serial.println(pid.getError());
-
-    //     Serial.print("Left read: ");
-    //     Serial.println(leftReading);
-
-    //     Serial.print("Right read: ");
-    //     Serial.println(rightReading);
-    //     count = 0;
-    // }
-
-    // count++;
     //diagnostics.runSimple();
 }
 
