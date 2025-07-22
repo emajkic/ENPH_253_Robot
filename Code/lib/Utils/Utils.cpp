@@ -6,15 +6,14 @@
 #include "PinSetup.h"
 #include "Constants.h"
 
-TwoWire lidarBus = TwoWire(0);      // VL53L1X on GPIO21/22
-TwoWire displayBus = TwoWire(1);    // OLED + Sonar on GPIO37/38
+TwoWire displayBus = TwoWire(1);    // OLED + Sonar on GPIO13/14
 
 /*
 * Begin I2C wire communication (*call before initializePins)
 */
 void Utils::beginWire() {
-    lidarBus.begin(SDA_LIDAR, SCL_LIDAR);
-    lidarBus.setClock(400000);
+    Wire.begin(SDA_LIDAR, SCL_LIDAR);
+    Wire.setClock(400000);
 
     displayBus.begin(SDA_EXTRA, SCL_EXTRA);
     displayBus.setClock(400000);

@@ -78,7 +78,6 @@ boolean ServoESP::detach()
 void ServoESP::moveServo(int angle)
 {
     // 1. Calculate duty based on 500us to 2500us 
-
     int pulseMin = 500; // in microseconds
     int pulseMax = 2500;
     angle = constrain(angle, 0, 180);

@@ -2,8 +2,10 @@
 #define CLAW_H
 
 #include <Arduino.h>
-#include <ServoESP.h>
 #include <map> // Required header for std::map
+
+#include "Motor.h"
+#include "ServoESP.h"
 
 class Claw
 {

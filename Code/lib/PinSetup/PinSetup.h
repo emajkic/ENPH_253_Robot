@@ -16,8 +16,8 @@ const int pwmChannelLR = 7;
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22
 const int SCL_LIDAR= 22;
-const int SDA_EXTRA = 37; // OLED, Sonar: 37, 38
-const int SCL_EXTRA = 38;
+const int SDA_EXTRA = 13; // OLED, Sonar: 37, 38
+const int SCL_EXTRA = 14;
 
 // Lidar //
 const int XSHUT_PIN_LEFT = 8;
@@ -41,12 +41,12 @@ const int MOTOR_RIGHT_B_PIN = 26;
 
 // Claw //
 const int CLAW_SERVO_1_PIN = 12;
-const int CLAW_SERVO_2_PIN = 13;
+const int CLAW_SERVO_2_PIN = 38;
 const int ROTARY_IN_CLK_PIN = 36;
 const int ROTARY_IN_DT_PIN = 39;
 const int CLAW_HOME_SWITCH_PIN = 15;
 
-const int ROTARY_MOTOR_PIN = 14;
+const int ROTARY_MOTOR_PIN = 37;
 const int CLAMP_MOTOR_FORW_PIN = 4;
 const int CLAMP_MOTOR_BACK_PIN = 2;
 

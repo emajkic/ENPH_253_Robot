@@ -1,6 +1,8 @@
 #ifndef Utils_h
 #define Utils_h
 
+#include <Wire.h>
+
 class Utils {
     public:
         /*

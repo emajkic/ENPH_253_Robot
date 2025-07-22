@@ -8,10 +8,6 @@
 #include "Constants.h"
 #include "PinSetup.h"
 
-unsigned long timeout = 1000;   // val in ms (check this)
-unsigned long timeoutLidar = 1000; 
-const int angularStep = 1; // val in degrees
-
 Lidar::Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP &servo)
     : sclPin(sclPin), sdaPin(sdaPin), xshutPin(xshutPin), address(i2cAddress), servo(servo)
 {
@@ -19,24 +15,20 @@ Lidar::Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP 
 }
 
 /*
- * Sweep the servo from 0-180, at each point saving distance reading to obtain map with angle --> distance to serve as the robot's vision
+ * Sweep the servo within angular range, at each point saving distance reading to obtain map with angle
  *
- * @return map with key = angle of servo, value = distance reading taken at that point
- *
- * the angle increments in steps of size controlled by constants above (AND LATER IN CONSTANTS.H)
+ * @return map with key = angle of servo, value = distance reading taken at that point pairs
  */
-std::map<int, uint16_t> Lidar::sweepReading(int endAngle)
+std::map<int, uint16_t> Lidar::sweepReading(int startAngle, int endAngle)
 {
     std::map<int, uint16_t> readings;
 
-    for (int angle = 0; angle <= endAngle; angle += angularStep)
+    for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
     {
-        this->servo.moveServo(angle);
+        this->servo.moveServoChassis(angle);
         uint16_t reading = singleMeasurement();
         readings.insert({angle, reading});
     }
-
-   //servo.moveServo(0); 
 
     return readings; 
 }
@@ -44,16 +36,42 @@ std::map<int, uint16_t> Lidar::sweepReading(int endAngle)
 /*
  * Stops measurements and the servos motion
  *
+ * @return true if successful stop
  */
 bool Lidar::stop() {
-    servo.moveServo(0); 
+    servo.moveServoChassis(0); 
     servo.detach();  // Or your stop logic
     return true;
 }
 
-/* returns false if timed out */
-bool Lidar::initialiseLidar()
-{
+/*
+* Scan angular range to find where to stop moving for pet retreival
+*
+* @return 0 if no pet is found or chassis not positioned at correct distance to stop and retrieve
+*/
+double Lidar::petSearchRegular() {
+    double distance = 0.0;
+
+    std::map<int, uint16_t> sweepReadings = sweepReading(-20, 20);
+    
+    return distance;
+}
+
+/*
+* //TODO : Come up with spec, implement
+*
+* @return 
+*/
+double Lidar::petSearchWindow() {
+    return 0.0;
+}
+
+/* 
+* Initialize LiDAR I2C communication
+*
+* @return false if timed out 
+*/
+bool Lidar::initialiseLidar(){
     pinMode(xshutPin, OUTPUT);
     digitalWrite(xshutPin, LOW);
     delay(10);
@@ -61,11 +79,14 @@ bool Lidar::initialiseLidar()
     pinMode(xshutPin, INPUT);
     delay(10);  // Let sensor boot
 
-    sensor.setTimeout(200);
+    sensor.setTimeout(500);
 
     unsigned long start = millis();
     while (!sensor.init()) {
-        if (millis() - start > timeoutLidar) return false;
+        delay(50);
+        if (millis() - start > TIMEOUT_LIDAR){
+            return false;
+        }
     }
 
     sensor.setAddress(address);
@@ -77,7 +98,9 @@ bool Lidar::initialiseLidar()
 }
 
 /*
-* Returns a uint containing the measurement, if failed it returns 0 **choose different value*** --> exceptions are apparently terrible for esps
+* Take a single distance measurement with sensor
+*
+* @return uint containing the measurement, if failed it returns 0 **choose different value***
 */
 uint16_t Lidar::singleMeasurement()
 {
@@ -88,13 +111,11 @@ uint16_t Lidar::singleMeasurement()
     while (!sensor.dataReady())
     { // wait until measurement ready
         // do other stuff --> to be determined based on needs later in the project
-        if (millis() - start > timeout)
+        if (millis() - start > TIMEOUT)
         {
             return 0; 
         }
-        
     }
 
     return sensor.read(false); // return value
 }
-

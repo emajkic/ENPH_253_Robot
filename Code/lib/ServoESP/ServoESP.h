@@ -15,16 +15,16 @@ class ServoESP {
        ServoESP(int servoPin, Name name, int chassisZero);
 
        /*
-       * Move servo to specified angle relative to it's hardware zero
+       * Move servo to specified angle relative to its hardware zero
        * 
-       * @param angle         angle to set the motor; int. between 0-180
+       * @param angle   angle to set the motor; int. between 0-180
        */
        void moveServo(int angle);
 
        /*
        * Move servo to specified angle relative to the chassis zero 
        * 
-       * @param angle         angle to set the motor; int. between 0 -> (180-chassis zero)
+       * @param angle   angle to set the motor; int. between 0 -> (180-chassis zero)
        */
        void moveServoChassis(int angle);
 
@@ -38,8 +38,10 @@ class ServoESP {
        */
        boolean detach();
 
+       /*
+       * Getters
+       */
        int getAbsoluteAngle();
-
        int getRelativeAngle();
        
     private:

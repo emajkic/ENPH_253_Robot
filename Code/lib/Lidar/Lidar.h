@@ -26,19 +26,34 @@ public:
      */
     bool stop();
 
-private:
-    VL53L1X sensor;
-    ServoESP &servo;
-    int sclPin;
-    int sdaPin; // these are i2c enabled pins for communicating with the LiDAR
-    int xshutPin;
+    /*
+    * Scan angular range to find where to stop moving for pet retreival
+    *
+    * @return 0 if no pet is found or chassis not positioned at correct distance to stop and retrieve
+    */
+    double petSearchRegular();
 
-    uint16_t singleMeasurement(); 
+    /*
+    * //TODO : Come up with spec, implement
+    *
+    * @return 
+    */
+    double petSearchWindow();
 
     /*
      * Obtain distance reading array --> this should spin the servo
      */
-    std::map<int, uint16_t> sweepReading(int endAngle);
+    std::map<int, uint16_t> sweepReading(int startAngle, int endAngle);
+
+private:
+    VL53L1X sensor;
+    ServoESP &servo;
+    int sclPin;
+    int sdaPin; 
+    int xshutPin;
+    uint8_t address;
+
+    uint16_t singleMeasurement(); 
 };
 
 #endif
