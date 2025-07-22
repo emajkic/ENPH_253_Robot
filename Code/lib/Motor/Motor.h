@@ -10,7 +10,8 @@ enum class Direction {
 
 enum class Side {
     LEFT,
-    RIGHT
+    RIGHT,
+    CLAMP
 };
 
 class Motor {

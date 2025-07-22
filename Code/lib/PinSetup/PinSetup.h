@@ -12,6 +12,8 @@ const int pwmChannelC1 = 4;
 const int pwmChannelC2 = 5;
 const int pwmChannelLL = 6;
 const int pwmChannelLR = 7;
+const int pwmChannelClampF = 8;
+const int pwmChannelClampB = 9;
 
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22

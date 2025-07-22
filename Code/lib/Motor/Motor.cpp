@@ -30,6 +30,13 @@ Motor::Motor(int pinF, int pinB, Side side) { //Should we rename these to pinCCW
         ledcSetup(pwmChannelBR, 500, 12);
         ledcAttachPin(pinB, pwmChannelBR);
         break;
+    case Side::CLAMP:
+        ledcSetup(pwmChannelClampF, 500, 12); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
+        ledcAttachPin(pinF, pwmChannelClampF);
+
+        ledcSetup(pwmChannelClampB, 500, 12);
+        ledcAttachPin(pinB, pwmChannelClampB);
+        break;
     default:
         break;
     }
@@ -48,6 +55,10 @@ void Motor::stop() {
     case Side::RIGHT:
         ledcWrite(pwmChannelFR, 0); 
         ledcWrite(pwmChannelBR, 0); 
+        break;
+    case Side::CLAMP:
+        ledcWrite(pwmChannelClampF, 0); 
+        ledcWrite(pwmChannelClampB, 0); 
         break;
     default:
         break;
@@ -76,6 +87,10 @@ void Motor::setSpeed(int speed, Direction direction) {
             ledcWrite(pwmChannelFR, speed); 
             ledcWrite(pwmChannelBR, 0); 
             break;
+        case Side::CLAMP:
+            ledcWrite(pwmChannelClampF, speed); 
+            ledcWrite(pwmChannelClampB, 0); 
+            break;    
         default:
             break;
     }
@@ -91,6 +106,10 @@ void Motor::setSpeed(int speed, Direction direction) {
             ledcWrite(pwmChannelFR, 0); 
             ledcWrite(pwmChannelBR, speed); 
             break;
+        case Side::CLAMP:
+            ledcWrite(pwmChannelClampF, 0); 
+            ledcWrite(pwmChannelClampB, speed); 
+            break;     
         default:
             break;
     }
