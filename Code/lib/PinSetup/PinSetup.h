@@ -18,8 +18,8 @@ const int pwmChannelClampB = 9;
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22
 const int SCL_LIDAR= 22;
-const int SDA_EXTRA = 13; // OLED, Sonar: 37, 38
-const int SCL_EXTRA = 14;
+const int SDA_EXTRA = 5; // OLED, Sonar: 5, 19
+const int SCL_EXTRA = 19;
 
 // Lidar //
 const int XSHUT_PIN_LEFT = 8;
@@ -29,8 +29,8 @@ const int SERVO_LIDAR_LEFT_PIN = 9;
 const int SERVO_LIDAR_RIGHT_PIN = 10;
 
 // Reflectance Circuit //
-const int QRD_PIN_LEFT = 3;
-const int QRD_PIN_RIGHT = 1; 
+const int QRD_PIN_LEFT = 13;
+const int QRD_PIN_RIGHT = 14; 
 
 // Hall Effect //
 const int HALL_OUTPUT_PIN = 0;
