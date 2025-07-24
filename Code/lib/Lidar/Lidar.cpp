@@ -40,7 +40,7 @@ std::map<int, uint16_t> Lidar::sweepReading(int startAngle, int endAngle)
  */
 bool Lidar::stop() {
     servo.moveServoChassis(0); 
-    servo.detach();  // Or your stop logic
+    servo.detach();  
     return true;
 }
 

@@ -49,6 +49,8 @@ void printMap(std::map<int, uint16_t> map){
 
       Serial.print(element.second);
 
+      
+
       Serial.println();
 
   }
