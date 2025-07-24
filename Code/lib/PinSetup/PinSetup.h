@@ -14,6 +14,10 @@ const int pwmChannelLL = 6;
 const int pwmChannelLR = 7;
 const int pwmChannelClampF = 8;
 const int pwmChannelClampB = 9;
+const int pwmChannelContServo = 10;
+
+// Start //
+const int ON_PIN = 37;
 
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22
@@ -48,13 +52,13 @@ const int ROTARY_IN_CLK_PIN = 36;
 const int ROTARY_IN_DT_PIN = 39;
 const int CLAW_HOME_SWITCH_PIN = 15;
 
-const int ROTARY_MOTOR_PIN = 12;
+const int CONT_SERVO_PIN = 12;
 const int CLAMP_MOTOR_FORW_PIN = 4;
 const int CLAMP_MOTOR_BACK_PIN = 2;
 
 // Basket //
-const int BASKET_SWITCH_PIN = 37;
-const int PULLEY_MOTOR_1_PIN = 13;
+const int BASKET_SWITCH_PIN = 13;
+const int PULLEY_MOTOR_1_PIN = 14;
 const int PULLEY_MOTOR_2_PIN = 14;
 
 #endif
