@@ -53,8 +53,7 @@ const int ROTARY_IN_DT_PIN = 39;
 const int CLAW_HOME_SWITCH_PIN = 15;
 
 const int CONT_SERVO_PIN = 12;
-const int CLAMP_MOTOR_FORW_PIN = 4;
-const int CLAMP_MOTOR_BACK_PIN = 2;
+const int CLAMP_SERVO_PIN = 15;
 
 // Basket //
 const int BASKET_SWITCH_PIN = 13;

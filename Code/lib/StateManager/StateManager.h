@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 
-#include "State.h"
-
 class StateManager {
     public:
         StateManager();
@@ -15,9 +13,6 @@ class StateManager {
         void poll(); 
         
     private:
-        int currentStateNum;
-        State currentState;
-
         void advanceState();
 };
 
