@@ -9,6 +9,216 @@
 		(date "2025-07-10")
 	)
 	(lib_symbols
+		(symbol "Claw_1"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Claw_1_0_1"
+				(rectangle
+					(start -5.08 -1.27)
+					(end 15.24 -10.16)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Claw_1_1_1"
+				(rectangle
+					(start -12.7 11.43)
+					(end 7.62 -24.1299)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type color)
+						(color 255 255 194 1)
+					)
+				)
+				(text "Rot_Encoder\n"
+					(at 1.27 0 0)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(pin input line
+					(at 7.62 7.62 180)
+					(length 2.54)
+					(name "Servo1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 7.62 3.81 180)
+					(length 2.54)
+					(name "Servo2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 7.62 -3.81 180)
+					(length 2.54)
+					(name "Out1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 7.62 -7.62 180)
+					(length 2.54)
+					(name "Out2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 7.62 -12.7 180)
+					(length 2.54)
+					(name "Rotary_Motor"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 7.62 -16.51 180)
+					(length 2.54)
+					(name "Clamp_Servo"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 7.62 -20.32 180)
+					(length 2.54)
+					(name "Home_Switch"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "GS_Development_Boards:ESP32-PICO-KIT-1"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -1156,253 +1366,6 @@
 					(at 5.08 -10.16 180)
 					(length 2.54)
 					(name "Servo"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Robot_Lib:Claw"
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Claw_0_1"
-				(rectangle
-					(start -5.08 -1.27)
-					(end 15.24 -10.16)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start -5.08 -17.78)
-					(end 15.24 -26.67)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "Claw_1_1"
-				(rectangle
-					(start -12.7 11.43)
-					(end 7.62 -33.0199)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type color)
-						(color 255 255 194 1)
-					)
-				)
-				(text "Clamp_Motor"
-					(at 1.016 -16.51 0)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "Rot_Encoder\n"
-					(at 1.27 0 0)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(pin input line
-					(at 7.62 7.62 180)
-					(length 2.54)
-					(name "Servo1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at 7.62 3.81 180)
-					(length 2.54)
-					(name "Servo2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 7.62 -3.81 180)
-					(length 2.54)
-					(name "Out1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 7.62 -7.62 180)
-					(length 2.54)
-					(name "Out2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 7.62 -12.7 180)
-					(length 2.54)
-					(name "Rotary_Motor"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 7.62 -20.32 180)
-					(length 2.54)
-					(name "Dir1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 7.62 -24.13 180)
-					(length 2.54)
-					(name "Dir2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 7.62 -29.21 180)
-					(length 2.54)
-					(name "Home_Switch"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3267,17 +3230,6 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 104.14) (xy 123.19 104.14)
-		)
-		(stroke
-			(width 0)
-			(type default)
-			(color 0 0 255 1)
-		)
-		(uuid "021326f4-d533-448a-be26-5346fc8996ed")
-	)
-	(wire
-		(pts
 			(xy 158.75 88.9) (xy 200.66 88.9)
 		)
 		(stroke
@@ -3594,17 +3546,6 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 101.6) (xy 111.76 144.78)
-		)
-		(stroke
-			(width 0)
-			(type default)
-			(color 0 0 255 1)
-		)
-		(uuid "58ffbb83-4c9c-42c8-bd47-d9219a42ff6e")
-	)
-	(wire
-		(pts
 			(xy 81.28 62.23) (xy 93.98 62.23)
 		)
 		(stroke
@@ -3692,6 +3633,17 @@
 	)
 	(wire
 		(pts
+			(xy 105.41 132.08) (xy 105.41 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color 0 0 255 1)
+		)
+		(uuid "63889fec-e4ae-47ca-b257-a28e14b30e1c")
+	)
+	(wire
+		(pts
 			(xy 198.12 60.96) (xy 198.12 78.74)
 		)
 		(stroke
@@ -3743,17 +3695,6 @@
 			(color 0 0 255 1)
 		)
 		(uuid "705874ae-f6eb-4658-8cd0-397638523164")
-	)
-	(wire
-		(pts
-			(xy 105.41 104.14) (xy 105.41 139.7)
-		)
-		(stroke
-			(width 0)
-			(type default)
-			(color 0 0 255 1)
-		)
-		(uuid "71d9aa9d-dab5-4dba-9ebf-61b9cc569b02")
 	)
 	(wire
 		(pts
@@ -3885,17 +3826,6 @@
 			(color 0 0 255 1)
 		)
 		(uuid "930254bd-d64e-41eb-bead-f05a6224ab4c")
-	)
-	(wire
-		(pts
-			(xy 86.36 139.7) (xy 105.41 139.7)
-		)
-		(stroke
-			(width 0)
-			(type default)
-			(color 0 0 255 1)
-		)
-		(uuid "94d1403d-025f-452c-8c7b-4ff8a5f08648")
 	)
 	(wire
 		(pts
@@ -4031,17 +3961,6 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 144.78) (xy 111.76 144.78)
-		)
-		(stroke
-			(width 0)
-			(type default)
-			(color 0 0 255 1)
-		)
-		(uuid "b6f41c70-a2c9-4b63-9ad7-93ba31216e29")
-	)
-	(wire
-		(pts
 			(xy 158.75 106.68) (xy 189.23 106.68)
 		)
 		(stroke
@@ -4137,6 +4056,17 @@
 			(color 0 132 132 1)
 		)
 		(uuid "c9a82c1f-d350-46d5-9bab-599c86942b44")
+	)
+	(wire
+		(pts
+			(xy 86.36 132.08) (xy 105.41 132.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color 0 0 255 1)
+		)
+		(uuid "cd5b7f6f-498e-4e36-8893-dfb04998d5cc")
 	)
 	(wire
 		(pts
@@ -4271,17 +4201,6 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 101.6) (xy 111.76 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-			(color 0 0 255 1)
-		)
-		(uuid "f2db2776-6f5f-49a2-9ee8-d0489faf88ed")
-	)
-	(wire
-		(pts
 			(xy 170.18 109.22) (xy 170.18 123.19)
 		)
 		(stroke
@@ -4300,6 +4219,17 @@
 			(color 255 0 255 1)
 		)
 		(uuid "f6ca3110-0b27-48d2-9e6a-f711e6f5975d")
+	)
+	(wire
+		(pts
+			(xy 105.41 101.6) (xy 123.19 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color 0 0 255 1)
+		)
+		(uuid "f6d1c104-512a-487d-8c26-3007b0847a85")
 	)
 	(wire
 		(pts
@@ -5169,7 +5099,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDREF")
-		(at 76.2 148.59 0)
+		(at 76.2 139.7 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5178,7 +5108,7 @@
 		(fields_autoplaced yes)
 		(uuid "59802b27-e820-4fbe-a870-877a3a4b5779")
 		(property "Reference" "#PWR021"
-			(at 76.2 154.94 0)
+			(at 76.2 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5187,7 +5117,7 @@
 			)
 		)
 		(property "Value" "PWRGND"
-			(at 76.2 153.67 0)
+			(at 76.2 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5195,7 +5125,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 76.2 148.59 0)
+			(at 76.2 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5204,7 +5134,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 76.2 148.59 0)
+			(at 76.2 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5213,7 +5143,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GNDREF\" , reference supply ground"
-			(at 76.2 148.59 0)
+			(at 76.2 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6105,92 +6035,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Robot_Lib:Claw")
-		(at 78.74 115.57 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "ba08bc62-2868-4e49-ae3e-a90a2df39d85")
-		(property "Reference" "Claw"
-			(at 64.008 126.492 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "~"
-			(at 80.01 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 78.74 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 78.74 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 78.74 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin ""
-			(uuid "af35d558-5629-41e9-a9cb-c3e8fde22eb8")
-		)
-		(pin ""
-			(uuid "455b77b9-ea28-4d3b-aaed-92cef2aaf25e")
-		)
-		(pin ""
-			(uuid "45bd1d0a-9cad-43fa-b00a-b5c51ac4e20b")
-		)
-		(pin ""
-			(uuid "75ef4307-f88c-4d27-9148-da88453dc032")
-		)
-		(pin ""
-			(uuid "843a0bca-29c4-42ae-a392-fdd2f3710921")
-		)
-		(pin ""
-			(uuid "f7634144-7f6f-4c88-a447-85eac1fe4eb9")
-		)
-		(pin ""
-			(uuid "dce665d6-94eb-4886-911d-f2e57954fbdc")
-		)
-		(pin ""
-			(uuid "14624b23-8525-40f9-be36-200cf5cf7b0d")
-		)
-		(instances
-			(project ""
-				(path "/5f7f31ac-00b7-444f-af4f-5eac09685ff1"
-					(reference "Claw")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+3.3V")
 		(at 107.95 163.83 0)
 		(unit 1)
@@ -6728,6 +6572,90 @@
 			(project ""
 				(path "/5f7f31ac-00b7-444f-af4f-5eac09685ff1"
 					(reference "#PWR08")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "Claw_1")
+		(lib_id "Robot_Lib:Claw")
+		(at 78.74 115.57 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e9d91c5f-e7cd-4756-ba29-cfbfa84e2b9a")
+		(property "Reference" "Claw"
+			(at 63.754 122.428 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "~"
+			(at 80.01 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 78.74 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 78.74 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 78.74 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin ""
+			(uuid "98a4bfd7-f397-4f07-a1c1-08b7e8b09267")
+		)
+		(pin ""
+			(uuid "34702929-4e2e-4691-add9-df83b6dd17c4")
+		)
+		(pin ""
+			(uuid "807c5f6d-e76b-4a2b-b12b-3635bf23353f")
+		)
+		(pin ""
+			(uuid "9b4fc0b3-7b29-4f6c-b4fb-ff354faa8dad")
+		)
+		(pin ""
+			(uuid "02e1f08b-0128-45c9-8bea-156d0e94a14a")
+		)
+		(pin ""
+			(uuid "144d9dcc-3e52-46ab-891b-4091dc2ad298")
+		)
+		(pin ""
+			(uuid "39636de4-435f-4c1f-9175-79c6c54d04ea")
+		)
+		(instances
+			(project ""
+				(path "/5f7f31ac-00b7-444f-af4f-5eac09685ff1"
+					(reference "Claw")
 					(unit 1)
 				)
 			)
