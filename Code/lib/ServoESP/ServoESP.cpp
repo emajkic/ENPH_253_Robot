@@ -75,8 +75,7 @@ boolean ServoESP::detach()
  * Move servo to specified angle 
  * @param angle    angle to set the motor; int. between 0-180
  */
-void ServoESP::moveServo(int angle)
-{
+void ServoESP::moveServo(int angle) {
     // 1. Calculate duty based on 500us to 2500us 
     int pulseMin = 500; // in microseconds
     int pulseMax = 2500;

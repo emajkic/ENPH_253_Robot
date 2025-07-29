@@ -5,8 +5,8 @@
 const int MIN_SPEED = 800;
 const int MAX_SPEED = 4095;
 
-const int BASE_SPEED_L = 1200;
-const int BASE_SPEED_R = 1200;
+const int BASE_SPEED_L = 700;
+const int BASE_SPEED_R = 700;
 
 // PID //
 const int LINE_BLACK = 1;
