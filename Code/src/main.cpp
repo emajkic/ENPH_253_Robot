@@ -1,9 +1,11 @@
 #include <Arduino.h>
+#include "driver/ledc.h"
 
-// #include "Claw.h"
+#include "Claw.h"
 #include "Constants.h"
-// #include "Diagnostics.h"
+#include "Diagnostics.h"
 #include "Lidar.h"
+#include "StateManager.h"
 #include "Motor.h"
 #include "PID.h"
 #include "PinSetup.h"
@@ -11,6 +13,8 @@
 #include "Utils.h"
 
 // // OBJECT CREATION //
+// StateManager stateManager;
+
 Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); //forward, backward
 Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); //forward, backward
 PID pid(motorL, motorR);
@@ -25,21 +29,19 @@ PID pid(motorL, motorR);
 Utils utils;
 
 void setup() {
-
-    // Serial.begin(115200);
+    Serial.begin(115200);
     // INITIALIZATION //
-    // utils.beginWire();
+    utils.beginWire();
     utils.initializePins();
-    //lidarLeft.initialiseLidar();
+
+    // lidarLeft.initialiseLidar();
     // diagnostics.init();
-
-    motorR.setSpeed(BASE_SPEED_R, Direction::FORWARD);
-    motorL.setSpeed(BASE_SPEED_L, Direction::FORWARD);
-
 }
 
 void loop() { 
-    pid.usePID();
+    pid.usePID(); // for testing
+
+    // stateManager.poll(); // Timing loops??? Helper/Minion?
 }
 
 
@@ -47,12 +49,6 @@ void loop() {
 
 
 
-<<<<<<< HEAD
-      
-
-      Serial.println();
-=======
->>>>>>> e5dcf6fda042238297ef54c13a392fc53bae65fd
 
 
 

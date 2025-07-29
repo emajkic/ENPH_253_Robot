@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "driver/ledc.h"
 #include "driver/adc.h"
+#include <cmath>
 
 #include "Constants.h"
 #include "PinSetup.h"
@@ -15,10 +16,8 @@ PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor
 
     this->error = 0;
     this->lastError = 0;
-    this->lastDifferentError = 0;
 
     this->lastTime = 0;
-    this->timeOfLastChange = 0;
 }
 
 /*
@@ -33,55 +32,90 @@ void PID::usePID() {
 * Set PID error to 0
 */
 void PID::resetPID() {
-    this->error = 0;
-    this->lastDifferentError = 0;
-    this->lastError = 0;
+    this->error = 0.0;
+    this->lastError = 0.0;
 }
 
-void PID::doPIDLine() {
-    this->error = getErrorLine();
+//DEBUG
+int count1 = 0;
+int lastVal = 8;
 
-    // int leftPrevSpeed = this->leftMotor.getSpeed();
-    // int rightPrevSpeed = this->rightMotor.getSpeed();
+void PID::doPIDLine() {
+    error = getErrorLine();
+
+    // unsigned long currentTime = micros();
+    // unsigned long deltaTime;
+
+    // double derivativeError;
+
+    // if (error != lastError) {
+    //     deltaTime = currentTime - lastTime;
+    //     if (deltaTime == 0) deltaTime = 1;
+
+    //     derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
+    // } else {
+    //     derivativeError = 0;
+    // }
+
+    // lastError = error;
+    // lastTime = currentTime;
 
     unsigned long currentTime = micros();
-    unsigned long deltaTime;
+    double dt = static_cast<double>(currentTime - lastTime) / 1000000.0; // seconds
+    if (dt <= 0.000001) dt = 0.000001;
 
-    double derivativeError;
-
-    if (error != lastError) {
-        deltaTime = currentTime - lastTime;
-        if (deltaTime == 0) deltaTime = 1;
-
-        derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
-
-        lastDifferentError = error;
-        timeOfLastChange = currentTime;
-    } else {
-        deltaTime = currentTime - timeOfLastChange;
-        if (deltaTime == 0) deltaTime = 1;
-
-        derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
-    }
+    double derivativeError = (error - lastError) / dt;
 
     lastError = error;
     lastTime = currentTime;
 
     // Adjustements
-    double adjustement = ((this->KP * error) + (this->KD * derivativeError));
-    
+    int adjustement = ((KP * error) + (KD * derivativeError));
+
     int newLeftSpeed = BASE_SPEED_L - adjustement;
     int newRightSpeed = BASE_SPEED_R + adjustement;
 
-    int newLeftSpeedCon = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);
-    int newRightSpeedCon = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);
+    Direction dirLeft;
+    Direction dirRight;
 
-    leftMotor.setSpeed(newLeftSpeedCon, Direction::FORWARD);
-    rightMotor.setSpeed(newRightSpeedCon, Direction::FORWARD);
+    // Left motor adjustement
+    if (newLeftSpeed < MIN_SPEED) {
+        newLeftSpeed = abs(newLeftSpeed - (2 * MIN_SPEED));
+        newLeftSpeed = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);
+        dirLeft = Direction::BACKWARD;
+    } else if (newLeftSpeed >= MIN_SPEED) {
+        newLeftSpeed = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);     
+        dirLeft = Direction::FORWARD;
+    }
 
-    // Update object properties
-    leftMotor.speed = newLeftSpeed;
-    rightMotor.speed = newRightSpeed;
+    // Right motor adjustement
+    if (newRightSpeed < MIN_SPEED) {
+        newRightSpeed = abs(newRightSpeed - (2 * MIN_SPEED));
+        newRightSpeed = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);
+        dirRight = Direction::BACKWARD;
+    } else if (newRightSpeed >= MIN_SPEED) {
+        newRightSpeed = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);     
+        dirRight = Direction::FORWARD;
+    }
+    
+    count1++;
+    if(count1 >= 1000){
+        if(error == -2){
+            lastVal = error;
+        }
+        Serial.print("KP = "); Serial.println(this->KP);
+        Serial.print("KD = "); Serial.println(this->KD);
+        Serial.print("Error: "); Serial.println(error);
+        Serial.print("Adjustment: "); Serial.println(adjustement);
+        Serial.print(" | LeftSpeed: "); Serial.println(newLeftSpeed);
+        Serial.print(" | RightSpeed: "); Serial.println(newRightSpeed);
+        Serial.print(" | Right Dir: "); Serial.println(dirRight == Direction::FORWARD);
+        Serial.print(" | Left Dir: "); Serial.println(dirLeft == Direction::FORWARD);
+        count1 = 0;
+    }
+
+    leftMotor.setSpeed(newLeftSpeed, dirLeft);
+    rightMotor.setSpeed(newRightSpeed, dirRight);
 }   
 
 int PID::getErrorLine() {
@@ -98,12 +132,16 @@ int PID::getErrorLine() {
         err = -1;
     } else if (leftReading == LINE_WHITE && rightReading == LINE_WHITE) {
         if (lastError > 0) {
-            err = 5;
+            err = 2;
         } else if (lastError <= 0) { //TODO: CHECK THIS -> WHAT IF LASTERR = 0
-            err = -5;
+            err = -2;
         } 
     }
 
+    // Low pass filter
+    if(abs(lastError - err) >= 2){
+        err = lastError;
+    }
     return err;
 }
 

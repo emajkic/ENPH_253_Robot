@@ -42,11 +42,9 @@ class PID {
         int KI;
 
         long lastTime;
-        long timeOfLastChange;
 
-        volatile int error;
-        volatile int lastError;
-        volatile int lastDifferentError;
+        int error;
+        int lastError;
 
         Motor &leftMotor;
         Motor &rightMotor;

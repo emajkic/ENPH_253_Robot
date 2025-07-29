@@ -1,20 +1,23 @@
 #ifndef Constants_h
 #define Constants_h
 
-// Motors //
-const int MIN_SPEED = 800;
-const int MAX_SPEED = 4095;
+#include <Arduino.h>
 
-const int BASE_SPEED_L = 700;
-const int BASE_SPEED_R = 700;
+
+// Speed Settings
+const int BASE_SPEED_L = 1200;  
+const int BASE_SPEED_R = 1200;
+const int MAX_SPEED = 4000;
+const int MIN_SPEED = 1100;
 
 // PID //
 const int LINE_BLACK = 1;
 const int LINE_WHITE = 0;
 
-const int KP_LINE_FOLLOWER = 55;
+const int KP_LINE_FOLLOWER = 120;
 const int KI_LINE_FOLLOWER = 0;
-const int KD_LINE_FOLLOWER = 0;
+const int KD_LINE_FOLLOWER = 90;
+
 
 // ServoESP //
 const int servoFreq = 50;       // 50 Hz = 20 ms period (standard for servos)
