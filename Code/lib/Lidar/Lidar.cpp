@@ -4,14 +4,14 @@
 #include <map> // Required header for std::map
 
 #include "ServoESP.h"
-#include "Lidar.h"
 #include "Constants.h"
 #include "PinSetup.h"
+#include "Lidar.h"
 
 Lidar::Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP &servo)
     : sclPin(sclPin), sdaPin(sdaPin), xshutPin(xshutPin), address(i2cAddress), servo(servo)
 {
-    servo.attach();
+  servo.attach();
 }
 
 /*
@@ -19,18 +19,14 @@ Lidar::Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP 
  *
  * @return map with key = angle of servo, value = distance reading taken at that point pairs
  */
-std::map<int, uint16_t> Lidar::sweepReading(int startAngle, int endAngle)
+void Lidar::sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH])
 {
-    std::map<int, uint16_t> readings;
-
-    for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
-    {
-        this->servo.moveServoChassis(angle);
-        uint16_t reading = singleMeasurement();
-        readings.insert({angle, reading});
-    }
-
-    return readings; 
+  for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
+  {
+    this->servo.moveServoChassis(angle);
+    uint16_t reading = singleMeasurement();
+    readings[angle - startAngle] = reading;
+  }
 }
 
 /*
@@ -38,84 +34,269 @@ std::map<int, uint16_t> Lidar::sweepReading(int startAngle, int endAngle)
  *
  * @return true if successful stop
  */
-bool Lidar::stop() {
-    servo.moveServoChassis(0); 
-    servo.detach();  // Or your stop logic
-    return true;
+bool Lidar::stop()
+{
+  servo.moveServoChassis(0);
+  servo.detach();
+  return true;
 }
 
 /*
-* Scan angular range to find where to stop moving for pet retreival
-*
-* @return 0 if no pet is found or chassis not positioned at correct distance to stop and retrieve
-*/
-double Lidar::petSearchRegular() {
-    double distance = 0.0;
+ * Scan angular range to find where to stop moving for pet retreival
+ *
+ * @return 0 if no pet is found or chassis not positioned at correct distance to stop and retrieve
+ */
+double Lidar::petSearchRegular()
+{
+  double distance = 0.0;
 
-    std::map<int, uint16_t> sweepReadings = sweepReading(-20, 20);
-    
-    return distance;
+  int readings[READING_LENGTH] = {};
+
+  sweepReading(-20, 20, readings);
+
+  bool isPet = isPetInFront(readings);
+
+  if (isPet)
+  {
+    distance = readings[20]; // test with this; i think it should be the average of the central flat section
+  }
+
+  return distance;
 }
 
 /*
-* //TODO : Come up with spec, implement
-*
-* @return 
-*/
-double Lidar::petSearchWindow() {
-    return 0.0;
+ * //TODO : Come up with spec, implement
+ *
+ * @return
+ */
+double Lidar::petSearchWindow()
+{
+  return 0.0;
 }
 
-/* 
-* Initialize LiDAR I2C communication
-*
-* @return false if timed out 
-*/
-bool Lidar::initialiseLidar(){
-    pinMode(xshutPin, OUTPUT);
-    digitalWrite(xshutPin, LOW);
-    delay(10);
+/*
+ * Initialize LiDAR I2C communication
+ *
+ * @return false if timed out
+ */
+bool Lidar::initialiseLidar()
+{
+  pinMode(xshutPin, OUTPUT);
+  digitalWrite(xshutPin, LOW);
+  delay(10);
 
-    pinMode(xshutPin, INPUT);
-    delay(10);  // Let sensor boot
+  pinMode(xshutPin, INPUT);
+  delay(10); // Let sensor boot
 
-    sensor.setTimeout(500);
+  sensor.setTimeout(500);
 
-    unsigned long start = millis();
-    while (!sensor.init()) {
-        delay(50);
-        if (millis() - start > TIMEOUT_LIDAR){
-            return false;
-        }
+  unsigned long start = millis();
+  while (!sensor.init())
+  {
+    delay(50);
+    if (millis() - start > TIMEOUT_LIDAR)
+    {
+      return false;
     }
+  }
 
-    sensor.setAddress(address);
+  sensor.setAddress(address);
 
-    sensor.setDistanceMode(VL53L1X::Short);
-    sensor.setMeasurementTimingBudget(20000);
+  sensor.setDistanceMode(VL53L1X::Short);
+  sensor.setMeasurementTimingBudget(20000);
 
-    return true;
+  return true;
 }
 
+// ------ PRIVATE FUNCTIONS ------ //
+
 /*
-* Take a single distance measurement with sensor
-*
-* @return uint containing the measurement, if failed it returns 0 **choose different value***
-*/
+ * Take a single distance measurement with sensor
+ *
+ * @return uint containing the measurement, if failed it returns 0 **choose different value***
+ */
 uint16_t Lidar::singleMeasurement()
 {
-    sensor.readSingle(false); // false means non-blocking
+  sensor.readSingle(false); // false means non-blocking
 
-    unsigned long start = millis();
+  unsigned long start = millis();
 
-    while (!sensor.dataReady())
-    { // wait until measurement ready
-        // do other stuff --> to be determined based on needs later in the project
-        if (millis() - start > TIMEOUT)
-        {
-            return 0; 
-        }
+  while (!sensor.dataReady())
+  { // wait until measurement ready
+    // do other stuff --> to be determined based on needs later in the project
+    if (millis() - start > TIMEOUT)
+    {
+      return 0;
+    }
+  }
+
+  return sensor.read(false); // return value
+}
+
+/*
+ * Take a single distance measurement with sensor
+ *
+ * @return uint containing the measurement, if failed it returns 0 **choose different value***
+ */
+void Lidar::medianFilter(const int (&raw)[READING_LENGTH], int (&filtered)[READING_LENGTH])
+{
+  for (int i = 0; i < READING_LENGTH; i++)
+  {
+    int window[5];
+
+    for (int j = -2; j <= 2; j++)
+    {
+      int index = i + j;
+      if (index < 0)
+        index = 0;
+      if (index >= READING_LENGTH)
+        index = 39;
+      window[j + 2] = raw[index];
     }
 
-    return sensor.read(false); // return value
+    std::sort(window, window + 5);
+    filtered[i] = window[2];
+  }
+}
+
+void Lidar::clampSpikes(int (&data)[READING_LENGTH], int maxStep)
+{ // PUT MAX STEP ABOVE IN CONSTS
+  for (int i = 1; i < READING_LENGTH; i++)
+  {
+    int diff = data[i] - data[i - 1];
+    if (abs(diff) > maxStep)
+    {
+      data[i] = data[i - 1] + (diff > 0 ? maxStep : -maxStep);
+    }
+  }
+}
+
+int Lidar::getAvg(int (&array)[READING_LENGTH])
+{
+  int sum = 0;
+  for (int i = 0; i < READING_LENGTH; i++)
+  {
+    sum += array[i];
+  }
+  return sum / READING_LENGTH;
+}
+
+void Lidar::removeOutliers(int avg, int (&distances)[READING_LENGTH])
+{
+  for (int j = 0; j < READING_LENGTH; j++)
+  {
+    if (abs(distances[j] - avg) > OUTLIER_THRESHOLD)
+    {
+      if (j == 0)
+      {
+        distances[j] = avg;
+      }
+      else if (j == 39)
+      {
+        distances[j] = distances[j - 1];
+      }
+      else
+      {
+        distances[j] = (distances[j - 1] + distances[j + 1]) / 2;
+      }
+    }
+  }
+}
+
+bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
+{
+  int refIndex = READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2;
+  int reference = distances[refIndex];
+  int sum = 0;
+
+  for (int j = refIndex + 1; j < READING_LENGTH / 2 + FLAT_SECTION_LENGTH / 2; j++)
+  {
+    if (abs(distances[j] - reference) > FLAT_SECTION_VARIATION)
+    {
+      Serial.println("ending due to non-flat");
+      return false;
+    }
+    sum += distances[j];
+  }
+
+  int avg = sum / FLAT_SECTION_LENGTH;
+  if (avg > MAX_PET_DISTANCE)
+  {
+    Serial.println("ending due to object being too far");
+    return false;
+  }
+
+  return true;
+}
+
+bool Lidar::isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex)
+{
+  if ((array[endIndex] - array[startIndex]) < overallThreshold)
+  {
+    Serial.println("not increasing enough"); // remove later
+    return false;
+  }
+
+  for (int i = startIndex; i < endIndex; ++i)
+  {
+    if (array[i + 1] - array[i] < -dipTolerance)
+    {
+      Serial.println("dip outside tolerance");
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool Lidar::isDecreasing(int (&array)[READING_LENGTH], int bumpTolerance, int overallThreshold, int startIndex, int endIndex)
+{
+  if ((array[endIndex] - array[startIndex]) > overallThreshold)
+  {
+    Serial.println("not decreasing enough"); // remove later
+    return false;
+  }
+
+  for (int i = startIndex; i < endIndex; ++i)
+  {
+    if (array[i + 1] - array[i] > bumpTolerance)
+    {
+      Serial.println("bump outside tolerance"); // remove later
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool Lidar::isPetInFront(int (&readings)[READING_LENGTH])
+{
+  int filtered[READING_LENGTH] = {};
+
+  // Step 1: Median filter
+  medianFilter(readings, filtered);
+
+  // Step 2: Clamp spikes
+  clampSpikes(filtered, 100);
+
+  // Step 3: Remove outliers
+  int avg = getAvg(filtered);
+  removeOutliers(avg, filtered);
+
+  // REMOVE THIS LATER:
+  for (int i = 0; i < 40; i++)
+  {
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(filtered[i]);
+  }
+
+  //////////
+
+  // Step 4: Apply detection logic
+  bool centralFlat = centralFlatSection(filtered);
+  bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, 0, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2);
+  bool increasingOnRight = isIncreasing(filtered, DIP_TOLERANCE, INCREASE_THRESHOLD, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2 + 1, 39);
+
+  return centralFlat && decreasingOnLeft && increasingOnRight;
 }

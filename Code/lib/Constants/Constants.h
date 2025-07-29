@@ -46,4 +46,21 @@ const long TIMEOUT = 1000;   // [ms]
 const long TIMEOUT_LIDAR = 1000; // [ms]
 const int ANGULAR_STEP = 1; // [degrees]
 
+// ALGO CONSTANTS
+
+const float MAX_PET_DISTANCE = 400.0; // mm
+const int OUTLIER_THRESHOLD = 100;
+
+const int FLAT_SECTION_LENGTH = 10;
+const int FLAT_SECTION_VARIATION = 30;
+
+const int BUMP_TOLERANCE = 50;
+const int DECREASE_THRESHOLD = 2;
+
+const int DIP_TOLERANCE = 30;
+const int INCREASE_THRESHOLD = 2;
+
+const int READING_LENGTH = 40; 
+
+
 #endif
