@@ -38,7 +38,6 @@ void PID::resetPID() {
 
 //DEBUG
 int count1 = 0;
-int lastVal = 8;
 
 void PID::doPIDLine() {
     error = getErrorLine();
@@ -59,10 +58,9 @@ void PID::doPIDLine() {
 
     // lastError = error;
     // lastTime = currentTime;
-
     unsigned long currentTime = micros();
-    double dt = static_cast<double>(currentTime - lastTime) / 1000000.0; // seconds
-    if (dt <= 0.000001) dt = 0.000001;
+    double dt = static_cast<double>(currentTime - lastTime) ; // AA: using micro seconds --> see by testing if this is closer to characteristic time
+    if (dt <= 1) dt = 1; // changed these from 0.000001 s (converted back to micros)
 
     double derivativeError = (error - lastError) / dt;
 
@@ -100,9 +98,6 @@ void PID::doPIDLine() {
     
     count1++;
     if(count1 >= 1000){
-        if(error == -2){
-            lastVal = error;
-        }
         Serial.print("KP = "); Serial.println(this->KP);
         Serial.print("KD = "); Serial.println(this->KD);
         Serial.print("Error: "); Serial.println(error);
@@ -142,6 +137,7 @@ int PID::getErrorLine() {
     if(abs(lastError - err) >= 2){
         err = lastError;
     }
+
     return err;
 }
 

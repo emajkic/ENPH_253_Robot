@@ -39,7 +39,7 @@ void Utils::initializePins() {
     pinMode(CLAW_HOME_SWITCH_PIN, INPUT_PULLUP);
 
     // Basket //
-    pinMode(PULLEY_MOTOR_1_PIN, OUTPUT);
-    pinMode(PULLEY_MOTOR_2_PIN, OUTPUT);
-    pinMode(BASKET_SWITCH_PIN, INPUT_PULLUP);
+    // pinMode(PULLEY_MOTOR_1_PIN, OUTPUT);
+    // pinMode(PULLEY_MOTOR_2_PIN, OUTPUT);
+    // pinMode(BASKET_SWITCH_PIN, INPUT_PULLUP);
 }
