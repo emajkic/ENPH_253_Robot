@@ -9,51 +9,40 @@
 #include "Constants.h"
 #include "PinSetup.h"
 
+
 class Lidar
 {
 public:
+
     Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP &servo);
-    
-    /*
-    * Initializes LiDAR sensor by starting I2C communication
-    */
+
     bool initialiseLidar();
-
-    /*
-     * Stops measurements and the servos motion
-     *
-     * @param angle
-     */
     bool stop();
-
-    /*
-    * Scan angular range to find where to stop moving for pet retreival
-    *
-    * @return 0 if no pet is found or chassis not positioned at correct distance to stop and retrieve
-    */
     double petSearchRegular();
-
-    /*
-    * //TODO : Come up with spec, implement
-    *
-    * @return 
-    */
     double petSearchWindow();
 
-    /*
-     * Obtain distance reading array --> this should spin the servo
-     */
-    std::map<int, uint16_t> sweepReading(int startAngle, int endAngle);
+    void sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH]);
 
 private:
     VL53L1X sensor;
     ServoESP &servo;
     int sclPin;
-    int sdaPin; 
+    int sdaPin;
     int xshutPin;
     uint8_t address;
 
-    uint16_t singleMeasurement(); 
+    uint16_t singleMeasurement();
+
+    void medianFilter(const int (&raw)[READING_LENGTH], int (&filtered)[READING_LENGTH]);
+    void clampSpikes(int (&data)[READING_LENGTH], int maxStep = 100);
+    void removeOutliers(int avg, int (&distances)[READING_LENGTH]);
+
+    bool centralFlatSection(int (&distances)[READING_LENGTH]);
+    bool isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex);
+    bool isDecreasing(int (&array)[READING_LENGTH], int bumpTolerance, int overallThreshold, int startIndex, int endIndex);
+
+    bool isPetInFront(int (&readings)[READING_LENGTH]);
+    int getAvg(int (&array)[READING_LENGTH]);
 };
 
 #endif
