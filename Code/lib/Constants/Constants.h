@@ -5,10 +5,10 @@
 
 
 // Speed Settings
-const int BASE_SPEED_L = 1300;  // adjust for straight motion
-const int BASE_SPEED_R = 1300;
+const int BASE_SPEED_L = 1200;  
+const int BASE_SPEED_R = 1200;
 const int MAX_SPEED = 4000;
-const int MIN_SPEED = 900;
+const int MIN_SPEED = 1100;
 
 // PID //
 const int LINE_BLACK = 1;

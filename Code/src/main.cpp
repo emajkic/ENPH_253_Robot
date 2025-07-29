@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "driver/ledc.h"
 
 #include "Claw.h"
 #include "Constants.h"
@@ -30,14 +31,14 @@ Utils utils;
 void setup() {
     Serial.begin(115200);
     // INITIALIZATION //
-    //utils.beginWire();
+    utils.beginWire();
     utils.initializePins();
+
     // lidarLeft.initialiseLidar();
     // diagnostics.init();
 }
 
 void loop() { 
-    
     pid.usePID(); // for testing
 
     // stateManager.poll(); // Timing loops??? Helper/Minion?

@@ -22,7 +22,7 @@ const int ON_PIN = 37;
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22
 const int SCL_LIDAR= 22;
-const int SDA_EXTRA = 19; // OLED, Sonar: 5, 19
+const int SDA_EXTRA = 19; // Sonar: 5, 19
 const int SCL_EXTRA = 20;
 
 // Lidar //
@@ -33,8 +33,8 @@ const int SERVO_LIDAR_LEFT_PIN = 9;
 const int SERVO_LIDAR_RIGHT_PIN = 10;
 
 // Reflectance Circuit //
-const int QRD_PIN_LEFT = 13; //CHANGE TO 34
-const int QRD_PIN_RIGHT = 14; //CHANGE TO 35 POST TESTINGGGGGGGGGGGGGGGGGGGGGGG
+const int QRD_PIN_LEFT = 13; //CHANGE TO 34 WHEN DOING IT FR
+const int QRD_PIN_RIGHT = 14; //CHANGE TO 35 WHEN DONE TESTINGGGGGGGGGGGGGGGGGGGGGGG
 
 // Hall Effect //
 const int HALL_OUTPUT_PIN = 38;
@@ -50,9 +50,9 @@ const int CLAW_SERVO_1_PIN = 27;
 const int CLAW_SERVO_2_PIN = 0;
 const int ROTARY_IN_CLK_PIN = 36;
 const int ROTARY_IN_DT_PIN = 39;
-const int CLAW_HOME_SWITCH_PIN = 15;
+const int CLAW_HOME_SWITCH_PIN = 4;
 
-const int CONT_SERVO_PIN = 12;
+const int CONT_SERVO_PIN = 12; // "Rotary Motor"
 const int CLAMP_SERVO_PIN = 15;
 
 // Basket //

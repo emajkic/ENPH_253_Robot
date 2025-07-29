@@ -36,22 +36,35 @@ void PID::resetPID() {
     this->lastError = 0.0;
 }
 
+//DEBUG
+int count1 = 0;
+int lastVal = 8;
+
 void PID::doPIDLine() {
     error = getErrorLine();
 
+    // unsigned long currentTime = micros();
+    // unsigned long deltaTime;
+
+    // double derivativeError;
+
+    // if (error != lastError) {
+    //     deltaTime = currentTime - lastTime;
+    //     if (deltaTime == 0) deltaTime = 1;
+
+    //     derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
+    // } else {
+    //     derivativeError = 0;
+    // }
+
+    // lastError = error;
+    // lastTime = currentTime;
+
     unsigned long currentTime = micros();
-    unsigned long deltaTime;
+    double dt = static_cast<double>(currentTime - lastTime) / 1000000.0; // seconds
+    if (dt <= 0.000001) dt = 0.000001;
 
-    double derivativeError;
-
-    if (error != lastError) {
-        deltaTime = currentTime - lastTime;
-        if (deltaTime == 0) deltaTime = 1;
-
-        derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
-    } else {
-        derivativeError = 0;
-    }
+    double derivativeError = (error - lastError) / dt;
 
     lastError = error;
     lastTime = currentTime;
@@ -70,8 +83,6 @@ void PID::doPIDLine() {
         newLeftSpeed = abs(newLeftSpeed - (2 * MIN_SPEED));
         newLeftSpeed = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);
         dirLeft = Direction::BACKWARD;
-        // newLeftSpeed = MIN_SPEED;
-        // dirLeft = Direction::FORWARD;
     } else if (newLeftSpeed >= MIN_SPEED) {
         newLeftSpeed = constrain(newLeftSpeed, MIN_SPEED, MAX_SPEED);     
         dirLeft = Direction::FORWARD;
@@ -82,18 +93,26 @@ void PID::doPIDLine() {
         newRightSpeed = abs(newRightSpeed - (2 * MIN_SPEED));
         newRightSpeed = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);
         dirRight = Direction::BACKWARD;
-        // newRightSpeed = MIN_SPEED;
-        // dirRight = Direction::FORWARD;
     } else if (newRightSpeed >= MIN_SPEED) {
         newRightSpeed = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);     
         dirRight = Direction::FORWARD;
     }
     
-    Serial.print("KP = "); Serial.println(this->KP);
-    // Serial.print("Error: "); Serial.println(error);
-    // Serial.print("Adjustment: "); Serial.println(adjustement);
-    // Serial.print(" | LeftSpeed: "); Serial.print(newLeftSpeed);
-    // Serial.print(" | RightSpeed: "); Serial.print(newRightSpeed);
+    count1++;
+    if(count1 >= 1000){
+        if(error == -2){
+            lastVal = error;
+        }
+        Serial.print("KP = "); Serial.println(this->KP);
+        Serial.print("KD = "); Serial.println(this->KD);
+        Serial.print("Error: "); Serial.println(error);
+        Serial.print("Adjustment: "); Serial.println(adjustement);
+        Serial.print(" | LeftSpeed: "); Serial.println(newLeftSpeed);
+        Serial.print(" | RightSpeed: "); Serial.println(newRightSpeed);
+        Serial.print(" | Right Dir: "); Serial.println(dirRight == Direction::FORWARD);
+        Serial.print(" | Left Dir: "); Serial.println(dirLeft == Direction::FORWARD);
+        count1 = 0;
+    }
 
     leftMotor.setSpeed(newLeftSpeed, dirLeft);
     rightMotor.setSpeed(newRightSpeed, dirRight);
@@ -119,6 +138,10 @@ int PID::getErrorLine() {
         } 
     }
 
+    // Low pass filter
+    if(abs(lastError - err) >= 2){
+        err = lastError;
+    }
     return err;
 }
 
