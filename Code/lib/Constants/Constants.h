@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 
-
 // Speed Settings
 const int BASE_SPEED_L = 1300;  
 const int BASE_SPEED_R = 1300;
@@ -37,8 +36,6 @@ const double betaO = 0.942477796077;
 const double HALL_BASE_SIGNAL = 1.6; // [V]
 
 // Lidar, Pet Search //
-// const double MIN_PET_DIST = 15.0; // [cm] these are not final ******************************** !!!!!!!! **************
-// const double MAX_PET_DIST = 30.0; // [cm]
 const double ANGULAR_RANGE_PET = 40; // [degrees]
 const double ANGULAR_RANGE_WINDOW = 0; // [degrees] ******************************** !!!!!!!! **************
 
@@ -60,6 +57,5 @@ const int DIP_TOLERANCE = 30;
 const int INCREASE_THRESHOLD = 2;
 
 const int READING_LENGTH = 40; 
-
 
 #endif

@@ -15,17 +15,16 @@
 // // OBJECT CREATION //
 // StateManager stateManager;
 
-Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); //forward, backward
-Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); //forward, backward
+Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); 
+Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); 
 PID pid(motorL, motorR);
 
-// ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 92); //CHANGE CHASSIS_ZERO
-// ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 0);
+ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 90); //CHANGE CHASSIS_ZERO
+ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 100);
 
-// Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
-// Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
+Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
+Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 
-// Diagnostics diagnostics;
 Utils utils;
 
 void setup() {
@@ -34,31 +33,24 @@ void setup() {
     utils.beginWire();
     utils.initializePins();
 
-    // lidarLeft.initialiseLidar();
-    // diagnostics.init();
+    lidarLeft.initialiseLidar();
+    // lidarRight.initialiseLidar();
+
+    servoLidarLeft.moveServoChassis(0);
+    // servoLidarRight.moveServoChassis(0);
 }
 
 void loop() { 
-    pid.usePID(); // for testing
+    // pid.usePID(); 
+    if (lidarLeft.petSearchRegular() != 0) {
+        Serial.println("Pet on LEFT");
+    }  else {
+        Serial.println("No pet");
+    }
+    
+    // if (lidarRight.petSearchRegular() != 0) {
+    //     Serial.println("Pet on RIGHT");
+    // }
 
     // stateManager.poll(); // Timing loops??? Helper/Minion?
 }
-
-
-
-
-
-
-
-
-
-
-
-// void printMap(std::map<int, uint16_t> map){
-//   for (std::pair<int, uint16_t> element : map) {
-//       Serial.print(element.first);
-//       Serial.print(": ");
-//       Serial.print(element.second);
-//       Serial.println();
-//   }
-// }
