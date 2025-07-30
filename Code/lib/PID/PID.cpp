@@ -24,7 +24,6 @@ PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor
 * Use PID control loop
 */
 void PID::usePID() {
-    consts(); // FOR TESTING ONLY
     doPIDLine();
 }
 
@@ -42,22 +41,6 @@ int count1 = 0;
 void PID::doPIDLine() {
     error = getErrorLine();
 
-    // unsigned long currentTime = micros();
-    // unsigned long deltaTime;
-
-    // double derivativeError;
-
-    // if (error != lastError) {
-    //     deltaTime = currentTime - lastTime;
-    //     if (deltaTime == 0) deltaTime = 1;
-
-    //     derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
-    // } else {
-    //     derivativeError = 0;
-    // }
-
-    // lastError = error;
-    // lastTime = currentTime;
     unsigned long currentTime = micros();
     double dt = static_cast<double>(currentTime - lastTime) ; // AA: using micro seconds --> see by testing if this is closer to characteristic time
     if (dt <= 1) dt = 1; // changed these from 0.000001 s (converted back to micros)
@@ -139,14 +122,4 @@ int PID::getErrorLine() {
     }
 
     return err;
-}
-
-// FOR TESTING ONLY //
-void PID::consts() {
-    adc1_config_width(ADC_WIDTH_12Bit);
-    adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_12); // GPIO 35
-    adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_12); // GPIO 34
-    
-    this->KP = adc1_get_raw(ADC1_CHANNEL_7);
-    this->KD = adc1_get_raw(ADC1_CHANNEL_6);
 }

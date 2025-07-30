@@ -14,9 +14,9 @@ const int MIN_SPEED = 1000;
 const int LINE_BLACK = 1;
 const int LINE_WHITE = 0;
 
-const int KP_LINE_FOLLOWER = 120;
+const int KP_LINE_FOLLOWER = 750;
 const int KI_LINE_FOLLOWER = 0;
-const int KD_LINE_FOLLOWER = 90;
+const int KD_LINE_FOLLOWER = 80;
 
 
 // ServoESP //
@@ -37,8 +37,8 @@ const double betaO = 0.942477796077;
 const double HALL_BASE_SIGNAL = 1.6; // [V]
 
 // Lidar, Pet Search //
-const double MIN_PET_DIST = 15.0; // [cm] these are not final ******************************** !!!!!!!! **************
-const double MAX_PET_DIST = 30.0; // [cm]
+// const double MIN_PET_DIST = 15.0; // [cm] these are not final ******************************** !!!!!!!! **************
+// const double MAX_PET_DIST = 30.0; // [cm]
 const double ANGULAR_RANGE_PET = 40; // [degrees]
 const double ANGULAR_RANGE_WINDOW = 0; // [degrees] ******************************** !!!!!!!! **************
 
@@ -47,7 +47,6 @@ const long TIMEOUT_LIDAR = 1000; // [ms]
 const int ANGULAR_STEP = 1; // [degrees]
 
 // ALGO CONSTANTS
-
 const float MAX_PET_DISTANCE = 400.0; // mm
 const int OUTLIER_THRESHOLD = 100;
 
