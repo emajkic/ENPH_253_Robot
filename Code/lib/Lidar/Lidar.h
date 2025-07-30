@@ -1,5 +1,5 @@
-#ifndef LIDAR_H
-#define LIDAR_H
+#ifndef Lidar_h
+#define Lidar_h
 
 #include <Arduino.h>
 #include <VL53L1X.h>

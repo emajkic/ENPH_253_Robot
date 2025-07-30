@@ -1,5 +1,5 @@
-#ifndef CLAW_H
-#define CLAW_H
+#ifndef Claw_h
+#define Claw_h
 
 #include <Arduino.h>
 #include <map> // Required header for std::map
