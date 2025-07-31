@@ -1,20 +1,19 @@
 #include <Arduino.h>
-#include "driver/ledc.h"
 
 #include "Claw.h"
 #include "Constants.h"
-#include "Diagnostics.h"
 #include "Lidar.h"
-#include "StateManager.h"
 #include "Motor.h"
 #include "PID.h"
 #include "PinSetup.h"
 #include "ServoESP.h"
 #include "Utils.h"
 
-// // OBJECT CREATION //
-// StateManager stateManager;
+#include "States/State.h"
+#include "States/State1.h"
+#include "States/State2.h"
 
+// OBJECT CREATION //
 Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); 
 Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); 
 PID pid(motorL, motorR);
@@ -27,30 +26,31 @@ Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 
 Utils utils;
 
-void setup() {
-    Serial.begin(115200);
-    // INITIALIZATION //
-    utils.beginWire();
-    utils.initializePins();
+// STATE CREATION (Reverse Chronological) //
+State2 state2;
+State1 state1(&state2);
 
-    lidarLeft.initialiseLidar();
+State* currentState = &state1;
+
+void setup() {
+    Serial.begin(115200); //delete
+
+    // INITIALIZATION //
+
+    // utils.beginWire();
+    // utils.initializePins();
+
+    // lidarLeft.initialiseLidar();
     // lidarRight.initialiseLidar();
 
-    servoLidarLeft.moveServoChassis(0);
+    // // HOMING //
+    // servoLidarLeft.moveServoChassis(0);
     // servoLidarRight.moveServoChassis(0);
+    
+    // claw.home();
 }
 
 void loop() { 
-    // pid.usePID(); 
-    if (lidarLeft.petSearchRegular() != 0) {
-        Serial.println("Pet on LEFT");
-    }  else {
-        Serial.println("No pet");
-    }
-    
-    // if (lidarRight.petSearchRegular() != 0) {
-    //     Serial.println("Pet on RIGHT");
-    // }
-
-    // stateManager.poll(); // Timing loops??? Helper/Minion?
+    currentState->execute();
+    currentState = currentState->getNextState();
 }
