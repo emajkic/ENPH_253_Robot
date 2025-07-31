@@ -55,7 +55,4 @@ void setup() {
 void loop() { 
     // currentState->execute();
     // currentState = currentState->getNextState();
-
-    int d = sonar.getDistance();
-    Serial.println(d);
 }
