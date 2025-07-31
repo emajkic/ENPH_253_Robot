@@ -33,21 +33,23 @@ State1 state1(&state2);
 State* currentState = &state1;
 
 void setup() {
-    Serial.begin(115200); //delete
+    Serial.begin(115200);
 
     // INITIALIZATION //
+    utils.beginWire();
+    utils.initializePins();
 
-    // utils.beginWire();
-    // utils.initializePins();
+    lidarLeft.initialiseLidar();
+    lidarRight.initialiseLidar();
 
-    // lidarLeft.initialiseLidar();
-    // lidarRight.initialiseLidar();
-
-    // // HOMING //
-    // servoLidarLeft.moveServoChassis(0);
-    // servoLidarRight.moveServoChassis(0);
+    // HOMING //
+    servoLidarLeft.moveServoChassis(0);
+    servoLidarRight.moveServoChassis(0);
     
     // claw.home();
+
+    //ESP PIN TESTINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
+    digitalWrite(PULLEY_MOTOR_1_PIN, HIGH);
 }
 
 void loop() { 
