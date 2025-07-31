@@ -33,8 +33,8 @@ const int SERVO_LIDAR_LEFT_PIN = 9;
 const int SERVO_LIDAR_RIGHT_PIN = 10;
 
 // Reflectance Circuit //
-const int QRD_PIN_LEFT = 13; //CHANGE TO 34 WHEN DOING IT FR****************************************
-const int QRD_PIN_RIGHT = 14; //CHANGE TO 35 WHEN DONE TESTINGGGGGGGGGGGGGGGGGGGGGGG***********************************************
+const int QRD_PIN_LEFT = 34; 
+const int QRD_PIN_RIGHT = 35; 
 
 // Hall Effect //
 const int HALL_OUTPUT_PIN = 38;

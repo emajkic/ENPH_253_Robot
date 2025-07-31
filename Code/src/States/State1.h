@@ -5,7 +5,7 @@
 
 class State1 : public State {
     public:
-        State1(State* nextState, int payload);
+        State1(State* nextState);
 
         void execute() override;
 
@@ -14,7 +14,6 @@ class State1 : public State {
     private:
         State* nextState;    
         unsigned long stateStartTime;
-        int mypayload;
 };
 
 #endif
