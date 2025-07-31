@@ -17,23 +17,27 @@ const int KP_LINE_FOLLOWER = 750;
 const int KI_LINE_FOLLOWER = 0;
 const int KD_LINE_FOLLOWER = 80;
 
-
 // ServoESP //
-const int servoFreq = 50;       // 50 Hz = 20 ms period (standard for servos)
-const int servoResolution = 12; // 12-bit resolution (0–4096)
+const int SERVO_FREQ = 50;       // 50 Hz = 20 ms period (standard for servos)
+const int SERVO_RESOLUTION = 12; // 12-bit resolution (0–4096)
 
 // Claw //
-const int xbasket = 10; 
-const int ybasket = 10; // [cm] measure on chassis ******************************** !!!!!!!! **************
-const int thetaBasket = 270; 
+const int X_BASKET = 10; 
+const int Y_BASKET = 10; // [cm] measure on chassis ******************************** !!!!!!!! **************
+const int THETA_BASKET = 270; 
 
-const int l1 = 18;
-const int l2 = 19; // [cm] these are not final ******************************** !!!!!!!! **************
+const int L1 = 18;
+const int L2 = 19; // [cm] these are not final ******************************** !!!!!!!! **************
 
-const double alphaO = 1.68879093374; // angle of arm controlled by servo 1 relative to the horizontal [rad]
-const double betaO = 0.942477796077;
+const double ALPHA_0 = 2.51327412287; // angle of arm controlled by servo 1 relative to the horizontal [rad]
+const double BETA_0 = 0.692895713042;
 
-const double HALL_BASE_SIGNAL = 1.6; // [V]
+const int X_ARCHWAY = 0;
+const int Y_ARCHWAY = 0;
+const int THETA_ARCHWAY = 0;
+
+const double HALL_MIDPOINT = 4096 * 2 / 3.3; // because the midpoint moved to 2 --> check with acc circuit that this is consistent behaviour 
+const double HALL_THRESHOLD = 4096 * 1 / 3.3;
 
 // Lidar, Pet Search //
 const double ANGULAR_RANGE_PET = 40; // [degrees]
@@ -43,7 +47,7 @@ const long TIMEOUT = 1000;   // [ms]
 const long TIMEOUT_LIDAR = 1000; // [ms]
 const int ANGULAR_STEP = 1; // [degrees]
 
-// ALGO CONSTANTS
+// ALGO CONSTANTS //
 const float MAX_PET_DISTANCE = 400.0; // mm
 const int OUTLIER_THRESHOLD = 100;
 

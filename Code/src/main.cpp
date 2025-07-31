@@ -7,6 +7,7 @@
 #include "PID.h"
 #include "PinSetup.h"
 #include "ServoESP.h"
+#include "Sonar.h"
 #include "Utils.h"
 
 #include "States/State.h"
@@ -17,6 +18,8 @@
 Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); 
 Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); 
 PID pid(motorL, motorR);
+
+Sonar sonar(TRIG_PIN, ECHO_PIN);
 
 ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 90); //CHANGE CHASSIS_ZERO
 ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 100);
@@ -46,13 +49,13 @@ void setup() {
     servoLidarLeft.moveServoChassis(0);
     servoLidarRight.moveServoChassis(0);
     
-    // claw.home();
-
-    //ESP PIN TESTINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-    digitalWrite(PULLEY_MOTOR_1_PIN, HIGH);
+    // claw.home()'
 }
 
 void loop() { 
-    currentState->execute();
-    currentState = currentState->getNextState();
+    // currentState->execute();
+    // currentState = currentState->getNextState();
+
+    int d = sonar.getDistance();
+    Serial.println(d);
 }

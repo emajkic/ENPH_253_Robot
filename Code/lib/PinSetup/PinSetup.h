@@ -22,8 +22,8 @@ const int ON_PIN = 37;
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22
 const int SCL_LIDAR= 22;
-const int SDA_EXTRA = 19; // Sonar: 5, 19
-const int SCL_EXTRA = 20;
+const int TRIG_PIN = 19; // Sonar
+const int ECHO_PIN = 20;
 
 // Lidar //
 const int XSHUT_PIN_LEFT = 7;

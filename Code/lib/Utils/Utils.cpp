@@ -12,8 +12,6 @@
 void Utils::beginWire() {
     Wire.begin(SDA_LIDAR, SCL_LIDAR);
     Wire.setClock(400000);
-
-    Wire.begin(SDA_EXTRA, SCL_EXTRA);
 }
 
 /*
@@ -34,6 +32,10 @@ void Utils::initializePins() {
     pinMode(ROTARY_IN_CLK_PIN, INPUT_PULLUP);
     pinMode(ROTARY_IN_DT_PIN, INPUT_PULLUP);
     pinMode(CLAW_HOME_SWITCH_PIN, INPUT_PULLUP);
+
+    // Sonar //
+    pinMode(TRIG_PIN, OUTPUT);
+    pinMode(ECHO_PIN, INPUT);
 
     // Basket //
     pinMode(PULLEY_MOTOR_1_PIN, OUTPUT);
