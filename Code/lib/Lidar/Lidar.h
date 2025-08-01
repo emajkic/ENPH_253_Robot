@@ -32,7 +32,7 @@ public:
     /*
     * Searches for all pets aside from the window; this makes the servo sweep, take in the lidar reading, and check if it is a pet
     * 
-    * @return the distance to the pet, but if no pet found, return 0.0
+    * @return the distance to the pet in cm, but if no pet found, return 0.0
     */
     double petSearchRegular();
 
@@ -46,7 +46,7 @@ public:
     *
     * @param startangle     the angle at which to start the lidar's sweep (relative to chassisZero)
     * @param endangle       the angle at which to end the lidar's sweep (relative to chassisZero)
-    * @param readings       the array in which to store the readings 
+    * @param readings       the array in which to store the readings (distances in mm)
     */
     void sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH]);
 

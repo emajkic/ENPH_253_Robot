@@ -76,9 +76,16 @@ public:
      */
     bool readHall();
 
+    /*
+     * Sweeps the head of the claw to search for signal from hall effect signal/pet
+     *
+     * The function will sweep the head of the claw from currrentPos-HALL_SWEEP_LENGTH/2 to currentPos+HALL_SWEEP_LENGTH/2
+     */
+    void sweepForHall();
+
     // encoder:
 
-    void moveTheta(int theta, int speed); // MAKE THIS PRIVATE AGAIN POST
+    void moveTheta(int theta, int speed); // MAKE THIS PRIVATE AGAIN POST TESTING
 
 private:
     ServoESP &servo1;

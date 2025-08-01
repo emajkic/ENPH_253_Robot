@@ -9,10 +9,10 @@
 #include "Motor.h"
 #include "Claw.h"
 
-const double X_OFFSET = 2.833;  // [cm]
+const double X_OFFSET = 2.833; // [cm]
 const double Y_OFFSET = 5.771; // [cm]
 
-// Interrupt Global Variables // 
+// Interrupt Global Variables //
 
 portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -23,9 +23,9 @@ volatile uint8_t reading = 0;
 volatile bool homed = false; // Flag to check if the servo is homed
 int oldEncPos = 0;
 
-
 // ISRS //
-void IRAM_ATTR handleCLK() {
+void IRAM_ATTR handleCLK()
+{
     portENTER_CRITICAL_ISR(&mux);
     reading = (digitalRead(ROTARY_IN_CLK_PIN) << 1) | digitalRead(ROTARY_IN_DT_PIN);
 
@@ -48,7 +48,8 @@ void IRAM_ATTR handleCLK() {
     portEXIT_CRITICAL_ISR(&mux);
 }
 
-void IRAM_ATTR handleDT() {
+void IRAM_ATTR handleDT()
+{
     portENTER_CRITICAL_ISR(&mux);
     reading = (digitalRead(ROTARY_IN_CLK_PIN) << 1) | digitalRead(ROTARY_IN_DT_PIN);
 
@@ -71,17 +72,19 @@ void IRAM_ATTR handleDT() {
     portEXIT_CRITICAL_ISR(&mux);
 }
 
-void IRAM_ATTR handleLimitSwitch() {
+void IRAM_ATTR handleLimitSwitch()
+{
     encoderPos = 0; // Reset encoder position when limit switch is pressed
     homed = true;   // Set the homed flag to true
 }
 
-// Class Member Functions // 
+// Class Member Functions //
 
 /*
  * This attaches the servo objects
  */
-Claw::Claw(ServoESP &servo1, ServoESP &servo2, ServoESP &clampMotor, ServoContinuous &thetaMotor) : servo1(servo1), servo2(servo2), clampMotor(clampMotor), thetaMotor(thetaMotor) {
+Claw::Claw(ServoESP &servo1, ServoESP &servo2, ServoESP &clampMotor, ServoContinuous &thetaMotor) : servo1(servo1), servo2(servo2), clampMotor(clampMotor), thetaMotor(thetaMotor)
+{
     servo1.attach();
     servo2.attach();
     clampMotor.attach();
@@ -91,7 +94,8 @@ Claw::Claw(ServoESP &servo1, ServoESP &servo2, ServoESP &clampMotor, ServoContin
 /*
  * Locates home position -> will spin DC motor until limit switch activated, and use that position to orient itself in the theta dir
  */
-void Claw::homeTheta() {
+void Claw::homeTheta()
+{
     delay(100);
 
     portENTER_CRITICAL(&mux);
@@ -104,7 +108,7 @@ void Claw::homeTheta() {
         {
             thetaMotor.setSpeed(10, ThetaDirection::CW); // Move to home position
             currentPos = encoderPos;
-            //Serial.println(currentPos);
+            // Serial.println(currentPos);
         }
         thetaMotor.stop(); // Stop the servo after homing
     }
@@ -113,7 +117,8 @@ void Claw::homeTheta() {
 /*
  * Moves claw to 0 in x and y
  */
-void Claw::homeXY() {
+void Claw::homeXY()
+{
     unsigned long time1 = millis();
     servo1.moveServo(0);
 
@@ -133,12 +138,13 @@ void Claw::homeXY() {
  * @param y     position in the cartesian z axis
  * @param theta    angle of lazy susan/bottom dc motor (will also come from lidar, and aside from the window will always be 0, 90, 180, or 270)
  */
-void Claw::moveClaw(int x, int y, int theta) {
+void Claw::moveClaw(int x, int y, int theta)
+{
 
     moveTheta(theta, 10); // speed used in dannys code
 
     // deal with delay
-    delay(100); 
+    delay(100);
 
     std::map<std::string, double> angles = getAngles(x - X_OFFSET, y - Y_OFFSET);
 
@@ -152,13 +158,13 @@ void Claw::moveClaw(int x, int y, int theta) {
     }
 
     servo2.moveServo(angles.at("beta"));
-
 }
 
 /*
  * Moves claw to basket (this will be the home position)
  */
-void Claw::basket() {
+void Claw::basket()
+{
     std::map<std::string, double> angles = getAngles(X_BASKET, Y_BASKET);
     unsigned long time1 = millis();
 
@@ -173,13 +179,14 @@ void Claw::basket() {
 
     moveTheta(THETA_BASKET, 10);
 
-    // SET THESE IN CONSTANTS.H INSTEAD OF DOING A CALCULATION EACH TIME 
+    // SET THESE IN CONSTANTS.H INSTEAD OF DOING A CALCULATION EACH TIME
 }
 
 /*
  * Moves claw to basket (this will be the home position)
  */
-void Claw::archwayPosition() {
+void Claw::archwayPosition()
+{
     std::map<std::string, double> angles = getAngles(X_ARCHWAY, Y_ARCHWAY);
     unsigned long time1 = millis();
 
@@ -197,23 +204,24 @@ void Claw::archwayPosition() {
     // SET THESE IN CONSTANTS.H
 }
 
-
-
 /*
  * Clamp the pet once hall signal detected
  */
-void Claw::clamp() {
+void Claw::clamp()
+{
     clampMotor.moveServo(10);
 }
 
 /*
  * Unclamp the pet once the claw has reached the basket
  */
-void Claw::unclamp() {
+void Claw::unclamp()
+{
     clampMotor.moveServo(90);
 }
 
-bool Claw::readHall() {
+bool Claw::readHall()
+{
     int hallReading = adc1_get_raw(ADC1_CHANNEL_0); // reads the analog value of ADC1_CHANNEL_0 (pin 36)
 
     if (abs(hallReading - HALL_MIDPOINT) > HALL_THRESHOLD)
@@ -225,9 +233,34 @@ bool Claw::readHall() {
 }
 
 /*
+ * Sweeps the head of the claw to search for signal from hall effect signal/pet
+ *
+ * The function will sweep the head of the claw from currrentPos-HALL_SWEEP_LENGTH/2 to currentPos+HALL_SWEEP_LENGTH/2
+ *
+ * @return true if hall signal found, false otherwise
+ */
+bool Claw::sweepForHall()
+{
+    int currentPos = encoderPos;
+
+    for (int i = currentPos - HALL_SWEEP_LENGTH / 2; i <= currentPos + HALL_SWEEP_LENGTH / 2; i++)
+    {
+        moveTheta(i, 2);
+
+        if (readHall())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/*
  * returns map with alpha and beta to move the servos to in degrees; alpha and beta are both already adjusted for the gearing of the claw
  */
-std::map<std::string, double> Claw::getAngles(int x, int y) {
+std::map<std::string, double> Claw::getAngles(int x, int y)
+{
     std::map<std::string, double> angles;
 
     double m = static_cast<double>(x);
@@ -243,9 +276,10 @@ std::map<std::string, double> Claw::getAngles(int x, int y) {
     return angles;
 }
 
-void Claw::moveTheta(int theta, int speed) {
+void Claw::moveTheta(int theta, int speed)
+{
 
-    portENTER_CRITICAL(&mux); // critical section in case interrupt is triggered inside this assignment 
+    portENTER_CRITICAL(&mux); // critical section in case interrupt is triggered inside this assignment
     int currentPos = encoderPos;
     portEXIT_CRITICAL(&mux);
 
@@ -256,7 +290,7 @@ void Claw::moveTheta(int theta, int speed) {
 
     ThetaDirection direction = ThetaDirection::CCW;
 
-    if ((theta - currentPos + 96) % 96 <= (currentPos - theta + 96) % 96) 
+    if ((theta - currentPos + 96) % 96 <= (currentPos - theta + 96) % 96)
     {
         direction = ThetaDirection::CCW;
     }
@@ -277,13 +311,13 @@ void Claw::moveTheta(int theta, int speed) {
         {
             thetaMotor.setSpeed(speed, ThetaDirection::CW);
             currentPos = encoderPos;
-        //    Serial.println(currentPos);
+            //    Serial.println(currentPos);
         }
         else
         {
             thetaMotor.setSpeed(speed, ThetaDirection::CCW);
             currentPos = encoderPos;
-        //    Serial.println(currentPos);
+            //    Serial.println(currentPos);
         }
 
         delay(100); // Adjust delay as needed for smoother movement
