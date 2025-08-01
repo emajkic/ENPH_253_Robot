@@ -1,5 +1,5 @@
-#ifndef LIDAR_H
-#define LIDAR_H
+#ifndef Lidar_h
+#define Lidar_h
 
 #include <Arduino.h>
 #include <VL53L1X.h>
@@ -10,10 +10,8 @@
 #include "PinSetup.h"
 
 
-class Lidar
-{
+class Lidar {
 public:
-
     Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP &servo);
 
     bool initialiseLidar();
@@ -22,6 +20,8 @@ public:
     double petSearchWindow();
 
     void sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH]);
+
+    bool isPetInFront(int (&readings)[READING_LENGTH]);
 
 private:
     VL53L1X sensor;
@@ -41,8 +41,9 @@ private:
     bool isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex);
     bool isDecreasing(int (&array)[READING_LENGTH], int bumpTolerance, int overallThreshold, int startIndex, int endIndex);
 
-    bool isPetInFront(int (&readings)[READING_LENGTH]);
-    int getAvg(int (&array)[READING_LENGTH]);
+    // takes avg of section of array from startIndex to endIndex, both inclusive 
+    // max endIndex = READING_LENGTH - 1
+    int getAvg(int (&array)[READING_LENGTH], int startIndex, int endIndex);
 };
 
 #endif

@@ -1,21 +1,43 @@
-#ifndef CLAW_H
-#define CLAW_H
+#ifndef Claw_h
+#define Claw_h
 
 #include <Arduino.h>
 #include <map> // Required header for std::map
 
-#include "Motor.h"
+#include "Constants.h"
+#include "PinSetup.h"
 #include "ServoESP.h"
+#include "ServoContinuous.h"
 
-class Claw
-{
+extern portMUX_TYPE mux;
+
+extern volatile int encoderPos; // will be limited between 0 - 95 (one full rotation)
+extern volatile bool clkFlag;
+extern volatile bool dtFlag;
+extern volatile uint8_t reading;
+extern volatile bool homed; // Flag to check if the servo is homed
+extern int oldEncPos;
+
+// ISRS //
+void IRAM_ATTR handleCLK();
+void IRAM_ATTR handleDT();
+void IRAM_ATTR handleLimitSwitch(); 
+
+// NOTE: need to do attachInterrupt along with pinMode in setup //
+
+class Claw {
 public:
-    Claw(ServoESP &servo1, ServoESP &servo2, Motor clampMotor);
+    Claw(ServoESP &servo1, ServoESP &servo2, ServoESP &clampMotor, ServoContinuous &thetaMotor);
 
     /*
      * Locates home position -> will spin DC motor until limit switch activated, and use that position to orient itself in the theta dir
      */
-    void home();
+    void homeTheta();
+
+    /*
+     * moves claw to 0 in x and y
+     */
+    void homeXY();
 
     /*
      * Moves claw to position specified by x, y, and theta
@@ -23,18 +45,24 @@ public:
      *
      * @param x     position in axis perpendicular to chassis sides (will come from lidar)
      * @param y     position in the cartesian z axis
-     * @param theta    angle of lazy susan/bottom dc motor (will also come from lidar, and aside from the window will always be 0, 90, 180, or 270)
+     * @param theta    ticks of lazy susan/bottom dc motor - must be a value form (0-95) --> if you give it a disallowed value, the claw will not move
+     * 
+     * NOTE: multiples of 24 are cardinal directions
      */
     void moveClaw(int x, int y, int theta);
 
     /*
-     * Moves claw to basket (this will be the home position)
+     * Moves claw to basket (this will be the artificial home position -> ie it's default even though the x,y,theta values may not all be 0)
      */
     void basket();
 
     /*
-     * Clamp the pet once hall signal detected --> HOW DO I DO THIS? DO WE HAVE AN INTERRUPT THE HALL'S INPUT PIN AND HAVE THE ISR CHANGE A BOOLEAN THAT ONCE ACTIVATED, CAUSES CLAMPING?
-                                                    --> OR DO WE WANT TO JUST CALL THIS FUNCTION
+     * Moves claw to it's archway position
+     */
+    void archwayPosition();
+
+    /*
+     * Clamp the pet once hall signal detected
      */
     void clamp();
 
@@ -43,19 +71,29 @@ public:
      */
     void unclamp();
 
+    /*
+     * Reads associated hall sensor
+     */
+    bool readHall();
+
+    // encoder:
+
+    void moveTheta(int theta, int speed); // MAKE THIS PRIVATE AGAIN POST
+
 private:
     ServoESP &servo1;
     ServoESP &servo2;
-    Motor &clampMotor; 
-    
-    // AM I MAKING DC MOTOR CLASS/OBJS TO ASSOCIATE WITH THIS OR NO
-   
+    ServoESP &clampMotor;
+    ServoContinuous &thetaMotor;
+
     /*
      * returns map with alpha and beta to move the servos to in degrees; alpha and beta are both between 0 and 90 degrees
      */
-    std::map<std::string, int> getAngles(int x, int y);
+    std::map<std::string, double> getAngles(int x, int y);
 
-    void moveTheta(int theta); 
+    
+
+    void stopTheta();
 };
 
 #endif

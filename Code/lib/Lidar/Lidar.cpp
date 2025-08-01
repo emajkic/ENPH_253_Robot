@@ -52,13 +52,13 @@ double Lidar::petSearchRegular()
 
   int readings[READING_LENGTH] = {};
 
-  sweepReading(-20, 20, readings);
+  sweepReading(-READING_LENGTH/2, READING_LENGTH/2, readings);
 
   bool isPet = isPetInFront(readings);
 
   if (isPet)
   {
-    distance = readings[20]; // test with this; i think it should be the average of the central flat section
+    distance = getAvg(readings, 15, 25); // was just readings[20] --> see if this is better
   }
 
   return distance;
@@ -171,14 +171,15 @@ void Lidar::clampSpikes(int (&data)[READING_LENGTH], int maxStep)
   }
 }
 
-int Lidar::getAvg(int (&array)[READING_LENGTH])
+int Lidar::getAvg(int (&array)[READING_LENGTH], int startIndex, int endIndex)
 {
   int sum = 0;
-  for (int i = 0; i < READING_LENGTH; i++)
+  for (int i = startIndex; i <= endIndex; i++)
   {
     sum += array[i];
-  }
-  return sum / READING_LENGTH;
+  } 
+  Serial.println(sum / (endIndex - startIndex + 1));
+  return sum / (endIndex - startIndex + 1);
 }
 
 void Lidar::removeOutliers(int avg, int (&distances)[READING_LENGTH])
@@ -231,7 +232,7 @@ bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
 
 bool Lidar::isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex)
 {
-  if ((array[endIndex] - array[startIndex]) < overallThreshold)
+  if ( (getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) < overallThreshold)  //(array[endIndex] - array[startIndex]) < overallThreshold
   {
     Serial.println("not increasing enough"); // remove later
     return false;
@@ -251,7 +252,7 @@ bool Lidar::isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int ove
 
 bool Lidar::isDecreasing(int (&array)[READING_LENGTH], int bumpTolerance, int overallThreshold, int startIndex, int endIndex)
 {
-  if ((array[endIndex] - array[startIndex]) > overallThreshold)
+  if ((getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) > overallThreshold) 
   {
     Serial.println("not decreasing enough"); // remove later
     return false;
@@ -280,23 +281,23 @@ bool Lidar::isPetInFront(int (&readings)[READING_LENGTH])
   clampSpikes(filtered, 100);
 
   // Step 3: Remove outliers
-  int avg = getAvg(filtered);
+  int avg = getAvg(filtered, 0, READING_LENGTH - 1);
   removeOutliers(avg, filtered);
 
   // REMOVE THIS LATER:
-  for (int i = 0; i < 40; i++)
-  {
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(filtered[i]);
-  }
+  // for (int i = 0; i < READING_LENGTH; i++)
+  // {
+  //   Serial.print(i);
+  //   Serial.print(": ");
+  //   Serial.println(filtered[i]);
+  // }
 
   //////////
 
   // Step 4: Apply detection logic
   bool centralFlat = centralFlatSection(filtered);
-  bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, 0, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2);
+  //bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, 0, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2);
   bool increasingOnRight = isIncreasing(filtered, DIP_TOLERANCE, INCREASE_THRESHOLD, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2 + 1, 39);
 
-  return centralFlat && decreasingOnLeft && increasingOnRight;
+  return centralFlat && increasingOnRight; // && decreasingOnLeft;
 }

@@ -1,64 +1,58 @@
 #include <Arduino.h>
-#include "driver/ledc.h"
 
 #include "Claw.h"
 #include "Constants.h"
-#include "Diagnostics.h"
 #include "Lidar.h"
-#include "StateManager.h"
 #include "Motor.h"
 #include "PID.h"
 #include "PinSetup.h"
 #include "ServoESP.h"
+#include "Sonar.h"
 #include "Utils.h"
 
-// // OBJECT CREATION //
-// StateManager stateManager;
+#include "States/State.h"
+#include "States/State1.h"
+#include "States/State2.h"
 
-Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); //forward, backward
-Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); //forward, backward
+// OBJECT CREATION //
+Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); 
+Motor motorR(MOTOR_RIGHT_F_PIN, MOTOR_RIGHT_B_PIN, Side::RIGHT); 
 PID pid(motorL, motorR);
 
-// ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 92); //CHANGE CHASSIS_ZERO
-// ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 0);
+Sonar sonar(TRIG_PIN, ECHO_PIN);
 
-// Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
-// Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
+ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 90); //CHANGE CHASSIS_ZERO
+ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 100);
 
-// Diagnostics diagnostics;
+Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
+Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
+
 Utils utils;
+
+// STATE CREATION (Reverse Chronological) //
+State2 state2;
+State1 state1(&state2);
+
+State* currentState = &state1;
 
 void setup() {
     Serial.begin(115200);
+
     // INITIALIZATION //
     utils.beginWire();
     utils.initializePins();
 
-    // lidarLeft.initialiseLidar();
-    // diagnostics.init();
+    lidarLeft.initialiseLidar();
+    lidarRight.initialiseLidar();
+
+    // HOMING //
+    servoLidarLeft.moveServoChassis(0);
+    servoLidarRight.moveServoChassis(0);
+    
+    // claw.home()'
 }
 
 void loop() { 
-    pid.usePID(); // for testing
-
-    // stateManager.poll(); // Timing loops??? Helper/Minion?
+    // currentState->execute();
+    // currentState = currentState->getNextState();
 }
-
-
-
-
-
-
-
-
-
-
-
-// void printMap(std::map<int, uint16_t> map){
-//   for (std::pair<int, uint16_t> element : map) {
-//       Serial.print(element.first);
-//       Serial.print(": ");
-//       Serial.print(element.second);
-//       Serial.println();
-//   }
-// }

@@ -24,7 +24,6 @@ PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor
 * Use PID control loop
 */
 void PID::usePID() {
-    consts(); // FOR TESTING ONLY
     doPIDLine();
 }
 
@@ -38,31 +37,13 @@ void PID::resetPID() {
 
 //DEBUG
 int count1 = 0;
-int lastVal = 8;
 
 void PID::doPIDLine() {
     error = getErrorLine();
 
-    // unsigned long currentTime = micros();
-    // unsigned long deltaTime;
-
-    // double derivativeError;
-
-    // if (error != lastError) {
-    //     deltaTime = currentTime - lastTime;
-    //     if (deltaTime == 0) deltaTime = 1;
-
-    //     derivativeError = static_cast<double>(error - lastError) / static_cast<double>(deltaTime);
-    // } else {
-    //     derivativeError = 0;
-    // }
-
-    // lastError = error;
-    // lastTime = currentTime;
-
     unsigned long currentTime = micros();
-    double dt = static_cast<double>(currentTime - lastTime) / 1000000.0; // seconds
-    if (dt <= 0.000001) dt = 0.000001;
+    double dt = static_cast<double>(currentTime - lastTime) ; // AA: using micro seconds --> see by testing if this is closer to characteristic time
+    if (dt <= 1) dt = 1; // changed these from 0.000001 s (converted back to micros)
 
     double derivativeError = (error - lastError) / dt;
 
@@ -100,9 +81,6 @@ void PID::doPIDLine() {
     
     count1++;
     if(count1 >= 1000){
-        if(error == -2){
-            lastVal = error;
-        }
         Serial.print("KP = "); Serial.println(this->KP);
         Serial.print("KD = "); Serial.println(this->KD);
         Serial.print("Error: "); Serial.println(error);
@@ -142,15 +120,6 @@ int PID::getErrorLine() {
     if(abs(lastError - err) >= 2){
         err = lastError;
     }
-    return err;
-}
 
-// FOR TESTING ONLY //
-void PID::consts() {
-    adc1_config_width(ADC_WIDTH_12Bit);
-    adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_12); // GPIO 35
-    adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_12); // GPIO 34
-    
-    this->KP = adc1_get_raw(ADC1_CHANNEL_7);
-    this->KD = adc1_get_raw(ADC1_CHANNEL_6);
+    return err;
 }

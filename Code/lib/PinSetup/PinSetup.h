@@ -22,8 +22,8 @@ const int ON_PIN = 37;
 // I2C Communication //
 const int SDA_LIDAR = 21; // Lidars: 21, 22
 const int SCL_LIDAR= 22;
-const int SDA_EXTRA = 19; // Sonar: 5, 19
-const int SCL_EXTRA = 20;
+const int TRIG_PIN = 19; // Sonar
+const int ECHO_PIN = 20;
 
 // Lidar //
 const int XSHUT_PIN_LEFT = 7;
@@ -33,8 +33,8 @@ const int SERVO_LIDAR_LEFT_PIN = 9;
 const int SERVO_LIDAR_RIGHT_PIN = 10;
 
 // Reflectance Circuit //
-const int QRD_PIN_LEFT = 13; //CHANGE TO 34 WHEN DOING IT FR****************************************
-const int QRD_PIN_RIGHT = 14; //CHANGE TO 35 WHEN DONE TESTINGGGGGGGGGGGGGGGGGGGGGGG***********************************************
+const int QRD_PIN_LEFT = 34; 
+const int QRD_PIN_RIGHT = 35; 
 
 // Hall Effect //
 const int HALL_OUTPUT_PIN = 38;

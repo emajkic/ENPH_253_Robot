@@ -25,22 +25,22 @@ boolean ServoESP::attach()
     switch (name)
     {
     case Name::CLAW1:
-        ledcSetup(pwmChannelC1, servoFreq, servoResolution); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
+        ledcSetup(pwmChannelC1, SERVO_FREQ, SERVO_RESOLUTION); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
         ledcAttachPin(servoPin, pwmChannelC1);
         this->pwmChannel = pwmChannelC1;
         break;
     case Name::CLAW2:
-        ledcSetup(pwmChannelC2, servoFreq, servoResolution);
+        ledcSetup(pwmChannelC2, SERVO_FREQ, SERVO_RESOLUTION);
         ledcAttachPin(servoPin, pwmChannelC2);
         this->pwmChannel = pwmChannelC2;
         break;
     case Name::LIDAR_LEFT:
-        ledcSetup(pwmChannelLL, servoFreq, servoResolution);
+        ledcSetup(pwmChannelLL, SERVO_FREQ, SERVO_RESOLUTION);
         ledcAttachPin(servoPin, pwmChannelLL);
         this->pwmChannel = pwmChannelLL;
         break;
     case Name::LIDAR_RIGHT:
-        ledcSetup(pwmChannelLR, servoFreq, servoResolution);
+        ledcSetup(pwmChannelLR, SERVO_FREQ, SERVO_RESOLUTION);
         ledcAttachPin(servoPin, pwmChannelLR);
         this->pwmChannel = pwmChannelLR;
         break;
@@ -83,8 +83,8 @@ void ServoESP::moveServo(int angle) {
     int pulseWidth_us = map(angle, 0, 180, pulseMin, pulseMax);
 
     // 2. Convert to duty cycle
-    uint32_t maxDuty = (1 << servoResolution) - 1;
-    uint32_t duty = ((uint32_t)pulseWidth_us * servoFreq * maxDuty) / 1000000;
+    uint32_t maxDuty = (1 << SERVO_RESOLUTION) - 1;
+    uint32_t duty = ((uint32_t)pulseWidth_us * SERVO_FREQ * maxDuty) / 1000000;
 
     ledcWrite(this->pwmChannel, duty);
 
