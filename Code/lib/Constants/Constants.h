@@ -29,6 +29,8 @@ const int THETA_BASKET = 270;
 const int L1 = 18;
 const int L2 = 19; // [cm] these are not final ******************************** !!!!!!!! **************
 
+const int GEAR_RATIO = 1.5; 
+
 const double ALPHA_0 = 2.51327412287; // angle of arm controlled by servo 1 relative to the horizontal [rad]
 const double BETA_0 = 0.692895713042;
 
@@ -37,29 +39,37 @@ const int Y_ARCHWAY = 0;
 const int THETA_ARCHWAY = 0;
 
 const double HALL_MIDPOINT = 4096 * 2 / 3.3; // because the midpoint moved to 2 --> check with acc circuit that this is consistent behaviour 
-const double HALL_THRESHOLD = 4096 * 1 / 3.3;
+const double HALL_THRESHOLD = 4096 * 1 / 3.3; 
+
+// Continuous Servo // 
+const int SERVO_CONT_FREQ = 250;
+const int SERVO_CONT_RESOLUTION = 8;
 
 // Lidar, Pet Search //
-const double ANGULAR_RANGE_PET = 40; // [degrees]
 const double ANGULAR_RANGE_WINDOW = 0; // [degrees] ******************************** !!!!!!!! **************
 
 const long TIMEOUT = 1000;   // [ms]
 const long TIMEOUT_LIDAR = 1000; // [ms]
 const int ANGULAR_STEP = 1; // [degrees]
 
-// ALGO CONSTANTS //
-const float MAX_PET_DISTANCE = 400.0; // mm
-const int OUTLIER_THRESHOLD = 100;
+// Constants for tuning lidar algorithm //
+const float MAX_PET_DISTANCE = 400.0; // [mm]
+const float MIN_PET_DISTANCE = 80.0; // [mm]
+
+const int OUTLIER_THRESHOLD = 100; // [mm]
 
 const int FLAT_SECTION_LENGTH = 10;
-const int FLAT_SECTION_VARIATION = 30;
+const int FLAT_SECTION_VARIATION = 30; // [mm]
 
-const int BUMP_TOLERANCE = 50;
-const int DECREASE_THRESHOLD = 2;
+const int MAX_SPIKE = 100; // [mm]
 
-const int DIP_TOLERANCE = 30;
-const int INCREASE_THRESHOLD = 2;
+const int BUMP_TOLERANCE = 50; // [mm]
+const int DIP_TOLERANCE = 30; // [mm]
 
-const int READING_LENGTH = 40; 
+const int DECREASE_THRESHOLD = 2; // [mm]
+const int INCREASE_THRESHOLD = 2; // [mm]
+
+const int READING_LENGTH = 40; // [entries or degrees of servo rotation]
+
 
 #endif

@@ -15,69 +15,11 @@ Lidar::Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP 
 }
 
 /*
- * Sweep the servo within angular range, at each point saving distance reading to obtain map with angle
+ * Initialises the lidar sensor, including:
+ * - pinModes for the xshuts, address, distance mode, and timing budget setting
+ * - the attaching for the servo occurs in the constructor
  *
- * @return map with key = angle of servo, value = distance reading taken at that point pairs
- */
-void Lidar::sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH])
-{
-  for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
-  {
-    this->servo.moveServoChassis(angle);
-    uint16_t reading = singleMeasurement();
-    readings[angle - startAngle] = reading;
-  }
-}
-
-/*
- * Stops measurements and the servos motion
- *
- * @return true if successful stop
- */
-bool Lidar::stop()
-{
-  servo.moveServoChassis(0);
-  servo.detach();
-  return true;
-}
-
-/*
- * Scan angular range to find where to stop moving for pet retreival
- *
- * @return 0 if no pet is found or chassis not positioned at correct distance to stop and retrieve
- */
-double Lidar::petSearchRegular()
-{
-  double distance = 0.0;
-
-  int readings[READING_LENGTH] = {};
-
-  sweepReading(-READING_LENGTH/2, READING_LENGTH/2, readings);
-
-  bool isPet = isPetInFront(readings);
-
-  if (isPet)
-  {
-    distance = getAvg(readings, 15, 25); // was just readings[20] --> see if this is better
-  }
-
-  return distance;
-}
-
-/*
- * //TODO : Come up with spec, implement
- *
- * @return
- */
-double Lidar::petSearchWindow()
-{
-  return 0.0;
-}
-
-/*
- * Initialize LiDAR I2C communication
- *
- * @return false if timed out
+ * @return true if successfully initialised
  */
 bool Lidar::initialiseLidar()
 {
@@ -108,13 +50,70 @@ bool Lidar::initialiseLidar()
   return true;
 }
 
-// ------ PRIVATE FUNCTIONS ------ //
+/*
+ * Stops the lidar's associated servo and detaches it from it's pwm channel
+ *
+ * @return true if successfully stopped
+ */
+bool Lidar::stop()
+{
+  servo.moveServoChassis(0);
+  servo.detach();
+  return true;
+}
 
 /*
- * Take a single distance measurement with sensor
+ * Searches for all pets aside from the window; this makes the servo sweep, take in the lidar reading, and check if it is a pet
  *
- * @return uint containing the measurement, if failed it returns 0 **choose different value***
+ * @return the distance to the pet, but if no pet found, return 0.0
  */
+double Lidar::petSearchRegular()
+{
+  double distance = 0.0;
+
+  int readings[READING_LENGTH] = {};
+
+  sweepReading(-READING_LENGTH / 2, READING_LENGTH / 2, readings);
+
+  bool isPet = isPetInFront(readings);
+
+  if (isPet)
+  {
+    distance = getAvg(readings, 15, 25); // was just readings[20] --> see if this is better
+  }
+
+  return distance;
+}
+
+/*
+ * Searches for the window pet
+ *
+ * @return the distance to the pet, but if no pet found, return 0.0
+ */
+double Lidar::petSearchWindow()
+{
+  return 0.0;
+}
+
+/*
+    * Sweeps the servo while the lidar takes readings at each angular position, with the readings recorded in the array passed in
+    *
+    * @param startangle     the angle at which to start the lidar's sweep (relative to chassisZero)
+    * @param endangle       the angle at which to end the lidar's sweep (relative to chassisZero)
+    * @param readings       the array in which to store the readings 
+    */
+void Lidar::sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH])
+{
+  for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
+  {
+    this->servo.moveServoChassis(angle);
+    uint16_t reading = singleMeasurement();
+    readings[angle - startAngle] = reading;
+  }
+}
+
+// ------ PRIVATE FUNCTIONS ------ //
+
 uint16_t Lidar::singleMeasurement()
 {
   sensor.readSingle(false); // false means non-blocking
@@ -133,11 +132,6 @@ uint16_t Lidar::singleMeasurement()
   return sensor.read(false); // return value
 }
 
-/*
- * Take a single distance measurement with sensor
- *
- * @return uint containing the measurement, if failed it returns 0 **choose different value***
- */
 void Lidar::medianFilter(const int (&raw)[READING_LENGTH], int (&filtered)[READING_LENGTH])
 {
   for (int i = 0; i < READING_LENGTH; i++)
@@ -160,7 +154,7 @@ void Lidar::medianFilter(const int (&raw)[READING_LENGTH], int (&filtered)[READI
 }
 
 void Lidar::clampSpikes(int (&data)[READING_LENGTH], int maxStep)
-{ // PUT MAX STEP ABOVE IN CONSTS
+{ 
   for (int i = 1; i < READING_LENGTH; i++)
   {
     int diff = data[i] - data[i - 1];
@@ -177,7 +171,7 @@ int Lidar::getAvg(int (&array)[READING_LENGTH], int startIndex, int endIndex)
   for (int i = startIndex; i <= endIndex; i++)
   {
     sum += array[i];
-  } 
+  }
   Serial.println(sum / (endIndex - startIndex + 1));
   return sum / (endIndex - startIndex + 1);
 }
@@ -225,6 +219,9 @@ bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
   {
     Serial.println("ending due to object being too far");
     return false;
+  } else if (avg < MIN_PET_DISTANCE) {
+    Serial.println("ending due to object being too close");
+    return false; 
   }
 
   return true;
@@ -232,7 +229,7 @@ bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
 
 bool Lidar::isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex)
 {
-  if ( (getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) < overallThreshold)  //(array[endIndex] - array[startIndex]) < overallThreshold
+  if ((getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) < overallThreshold) 
   {
     Serial.println("not increasing enough"); // remove later
     return false;
@@ -252,7 +249,7 @@ bool Lidar::isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int ove
 
 bool Lidar::isDecreasing(int (&array)[READING_LENGTH], int bumpTolerance, int overallThreshold, int startIndex, int endIndex)
 {
-  if ((getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) > overallThreshold) 
+  if ((getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) > overallThreshold)
   {
     Serial.println("not decreasing enough"); // remove later
     return false;
@@ -278,7 +275,7 @@ bool Lidar::isPetInFront(int (&readings)[READING_LENGTH])
   medianFilter(readings, filtered);
 
   // Step 2: Clamp spikes
-  clampSpikes(filtered, 100);
+  clampSpikes(filtered, MAX_SPIKE);
 
   // Step 3: Remove outliers
   int avg = getAvg(filtered, 0, READING_LENGTH - 1);
@@ -291,12 +288,10 @@ bool Lidar::isPetInFront(int (&readings)[READING_LENGTH])
   //   Serial.print(": ");
   //   Serial.println(filtered[i]);
   // }
-
-  //////////
-
+  
   // Step 4: Apply detection logic
   bool centralFlat = centralFlatSection(filtered);
-  //bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, 0, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2);
+  // bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, 0, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2);
   bool increasingOnRight = isIncreasing(filtered, DIP_TOLERANCE, INCREASE_THRESHOLD, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2 + 1, 39);
 
   return centralFlat && increasingOnRight; // && decreasingOnLeft;

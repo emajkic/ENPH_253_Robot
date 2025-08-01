@@ -1,12 +1,8 @@
 #include <Arduino.h>
 
 #include "ServoContinuous.h"
-// #include "Constants.h"
-// #include "PinSetup.h"
-
-const int pwmChannelContSer = 0;
-const int servoContFreq = 250;
-const int servoContResolution = 8;
+#include "Constants.h"
+#include "PinSetup.h"
 
 ServoContinuous::ServoContinuous(int servoPin)
 {
@@ -15,11 +11,11 @@ ServoContinuous::ServoContinuous(int servoPin)
 }
 
 /*
-
-Sets servo speed and direction.
-If valid direction is not provided, will set the speed to 0.*
-@param speed         int in [0,65]
-@param direction     CW or CCW; dir in which the motor should spin*/
+ * Sets servo speed and direction. If valid direction is not provided, will set the speed to 0.
+ *
+ * @param speed         int in [0,65]
+ * @param direction     CW or CCW; dir in which the motor should spin
+ */
 void ServoContinuous::setSpeed(int speed, ThetaDirection direction)
 {
     uint32_t duty = 0;
@@ -44,24 +40,26 @@ void ServoContinuous::setSpeed(int speed, ThetaDirection direction)
 }
 
 /*
-
-Initialise --> connect the servo to a pwm channel*
-@return false if failed to connect*/
+ * Attach servo object to a PWM channel
+ *
+ * @return true if successfully attached, false otherwise
+ */
 boolean ServoContinuous::attach()
 {
 
-    ledcSetup(pwmChannelContSer, servoContFreq, servoContResolution); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
-    ledcAttachPin(servoPin, pwmChannelContSer);
-    this->pwmChannel = pwmChannelContSer;
+    ledcSetup(pwmChannelContServo, SERVO_CONT_FREQ, SERVO_CONT_RESOLUTION); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
+    ledcAttachPin(servoPin, pwmChannelContServo);
+    this->pwmChannel = pwmChannelContServo;
 
     this->attached = true;
     return true;
 }
 
 /*
-
-disconnect the servo from the pwm channel*
-return: false if failed to disconnect (because the servo wasn't connected previously)*/
+ * Detach servo object to a PWM channel
+ *
+ * @return true if successfully detached, false otherwise
+ */
 boolean ServoContinuous::detach()
 {
     if (attached)
@@ -77,8 +75,9 @@ boolean ServoContinuous::detach()
 }
 
 /*
-    Sets speed to 0
-    */
-void ServoContinuous::stop(){
+ * Sets speed to 0
+ */
+void ServoContinuous::stop()
+{
     setSpeed(0, ThetaDirection::CW);
 }

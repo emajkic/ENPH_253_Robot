@@ -12,7 +12,7 @@
 const double X_OFFSET = 2.833;  // [cm]
 const double Y_OFFSET = 5.771; // [cm]
 
-// Interrupt stuff // 
+// Interrupt Global Variables // 
 
 portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -75,6 +75,8 @@ void IRAM_ATTR handleLimitSwitch() {
     encoderPos = 0; // Reset encoder position when limit switch is pressed
     homed = true;   // Set the homed flag to true
 }
+
+// Class Member Functions // 
 
 /*
  * This attaches the servo objects
@@ -235,26 +237,24 @@ std::map<std::string, double> Claw::getAngles(int x, int y) {
     double alpha_rad = -(atan2(n, m) + acos((L2 * L2 - L1 * L1 - l * l) / (-2.0 * L1 * l))) + ALPHA_0;
     double beta_rad = acos((l * l - L2 * L2 - L1 * L1) / (-2.0 * L2 * L1)) - BETA_0;
 
-    angles["alpha"] = 1.5 * alpha_rad * 180.0 / PI; // multiplying by 2 for gear ratio
-    angles["beta"] = 1.5 * beta_rad * 180.0 / PI;
-
-    // Serial.println(angles.at("alpha"));
-    // Serial.println(angles.at("beta"));
+    angles["alpha"] = GEAR_RATIO * alpha_rad * 180.0 / PI; // multiplying by 2 for gear ratio
+    angles["beta"] = GEAR_RATIO * beta_rad * 180.0 / PI;
 
     return angles;
 }
 
 void Claw::moveTheta(int theta, int speed) {
-    if (theta < 0 || theta > 95)
+
+    portENTER_CRITICAL(&mux); // critical section in case interrupt is triggered inside this assignment 
+    int currentPos = encoderPos;
+    portEXIT_CRITICAL(&mux);
+
+    if (theta < 0 || theta > 95 || theta == currentPos)
     {
         return;
     }
 
     ThetaDirection direction = ThetaDirection::CCW;
-
-    portENTER_CRITICAL(&mux); // critical section in case interrupt is triggered inside this assignment 
-    int currentPos = encoderPos;
-    portEXIT_CRITICAL(&mux);
 
     if ((theta - currentPos + 96) % 96 <= (currentPos - theta + 96) % 96) 
     {
