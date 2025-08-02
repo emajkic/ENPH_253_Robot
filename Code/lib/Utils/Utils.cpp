@@ -3,6 +3,7 @@
 #include <VL53L1X.h>
 
 #include "Utils.h"
+#include "Claw.h"
 #include "PinSetup.h"
 #include "Constants.h"
 
@@ -41,4 +42,14 @@ void Utils::initializePins() {
     pinMode(PULLEY_MOTOR_1_PIN, OUTPUT);
     pinMode(PULLEY_MOTOR_2_PIN, OUTPUT);
     pinMode(BASKET_SWITCH_PIN, INPUT_PULLUP);
+}
+
+/*
+* Attaches interrupts to all pins
+*/
+void Utils::attatchInterrupts() {
+    attachInterrupt(digitalPinToInterrupt(ROTARY_IN_CLK_PIN), handleCLK, RISING);
+    attachInterrupt(digitalPinToInterrupt(ROTARY_IN_DT_PIN), handleDT, RISING);
+    attachInterrupt(digitalPinToInterrupt(CLAW_HOME_SWITCH_PIN), handleLimitSwitch, RISING);
+    
 }

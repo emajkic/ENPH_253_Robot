@@ -14,6 +14,11 @@ class Utils {
         * Call pinMode for all pins defined in PinSetup.h
         */
         void initializePins();
+
+        /*
+        * Attaches interrupts to all pins
+        */
+        void attatchInterrupts();
 };
 
 #endif 
