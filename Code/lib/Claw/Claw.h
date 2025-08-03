@@ -93,6 +93,8 @@ private:
     ServoESP &clampMotor;
     ServoContinuous &thetaMotor;
 
+    ThetaDirection lastDir; 
+
     /*
      * returns map with alpha and beta to move the servos to in degrees; alpha and beta are both between 0 and 90 degrees
      */

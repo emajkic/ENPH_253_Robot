@@ -12,9 +12,8 @@ const int pwmChannelC1 = 4;
 const int pwmChannelC2 = 5;
 const int pwmChannelLL = 6;
 const int pwmChannelLR = 7;
-const int pwmChannelClampF = 8;
-const int pwmChannelClampB = 9;
-const int pwmChannelContServo = 10;
+const int pwmChannelClamp = 8;
+const int pwmChannelContServo = 9;
 
 // Start //
 const int ON_PIN = 37;

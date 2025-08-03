@@ -7,7 +7,8 @@ enum class Name { // do something here for the PWM channel?
     CLAW1,
     CLAW2, 
     LIDAR_LEFT, 
-    LIDAR_RIGHT
+    LIDAR_RIGHT, 
+    CLAMP
 };
 
 class ServoESP {

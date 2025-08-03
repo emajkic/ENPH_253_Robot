@@ -65,7 +65,7 @@ bool Lidar::stop()
 /*
  * Searches for all pets aside from the window; this makes the servo sweep, take in the lidar reading, and check if it is a pet
  *
- * @return the distance to the pet in cm, but if no pet found, return 0.0
+ * @return the distance to the pet, but if no pet found, return 0.0
  */
 double Lidar::petSearchRegular()
 {
@@ -82,7 +82,7 @@ double Lidar::petSearchRegular()
     distance = getAvg(readings, 15, 25); // was just readings[20] --> see if this is better
   }
 
-  return distance / 10; // convert to cm (all readings in mm) --> this is for compatibility with the claw functions later
+  return distance;
 }
 
 /*
@@ -96,12 +96,33 @@ double Lidar::petSearchWindow()
 }
 
 /*
-    * Sweeps the servo while the lidar takes readings at each angular position, with the readings recorded in the array passed in
-    *
-    * @param startangle     the angle at which to start the lidar's sweep (relative to chassisZero)
-    * @param endangle       the angle at which to end the lidar's sweep (relative to chassisZero)
-    * @param readings       the array in which to store the readings 
-    */
+ * Searches for the pillar
+ */
+double Lidar::petSearchPillar()
+{
+  double distance = 0.0;
+
+  int readings[READING_LENGTH] = {};
+
+  sweepReading(-READING_LENGTH / 2, READING_LENGTH / 2, readings);
+
+  bool isPet = isPillarInFront(readings);
+
+  if (isPet)
+  {
+    distance = getAvg(readings, 15, 25); // was just readings[20] --> see if this is better
+  }
+
+  return distance;
+}
+
+/*
+ * Sweeps the servo while the lidar takes readings at each angular position, with the readings recorded in the array passed in
+ *
+ * @param startangle     the angle at which to start the lidar's sweep (relative to chassisZero)
+ * @param endangle       the angle at which to end the lidar's sweep (relative to chassisZero)
+ * @param readings       the array in which to store the readings
+ */
 void Lidar::sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH])
 {
   for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
@@ -154,7 +175,7 @@ void Lidar::medianFilter(const int (&raw)[READING_LENGTH], int (&filtered)[READI
 }
 
 void Lidar::clampSpikes(int (&data)[READING_LENGTH], int maxStep)
-{ 
+{
   for (int i = 1; i < READING_LENGTH; i++)
   {
     int diff = data[i] - data[i - 1];
@@ -172,7 +193,7 @@ int Lidar::getAvg(int (&array)[READING_LENGTH], int startIndex, int endIndex)
   {
     sum += array[i];
   }
-  Serial.println(sum / (endIndex - startIndex + 1));
+  //Serial.println(sum / (endIndex - startIndex + 1));
   return sum / (endIndex - startIndex + 1);
 }
 
@@ -198,6 +219,20 @@ void Lidar::removeOutliers(int avg, int (&distances)[READING_LENGTH])
   }
 }
 
+void Lidar::findMinAndLocation(int (&distances)[READING_LENGTH], int (&values)[2])
+{
+  int min = 2000; 
+  for (int i = 0; i < READING_LENGTH; i++){
+    if (distances[i] <= min){
+      min = distances[i]; 
+
+      values[0] = i; 
+      values[1] = min; 
+
+    }
+  }
+}
+
 bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
 {
   int refIndex = READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2;
@@ -219,9 +254,11 @@ bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
   {
     Serial.println("ending due to object being too far");
     return false;
-  } else if (avg < MIN_PET_DISTANCE) {
+  }
+  else if (avg < MIN_PET_DISTANCE)
+  {
     Serial.println("ending due to object being too close");
-    return false; 
+    return false;
   }
 
   return true;
@@ -229,7 +266,7 @@ bool Lidar::centralFlatSection(int (&distances)[READING_LENGTH])
 
 bool Lidar::isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex)
 {
-  if ((getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) < overallThreshold) 
+  if ((getAvg(array, endIndex - 2, endIndex) - getAvg(array, startIndex, startIndex + 2)) < overallThreshold)
   {
     Serial.println("not increasing enough"); // remove later
     return false;
@@ -295,4 +332,51 @@ bool Lidar::isPetInFront(int (&readings)[READING_LENGTH])
   bool increasingOnRight = isIncreasing(filtered, DIP_TOLERANCE, INCREASE_THRESHOLD, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2 + 1, 39);
 
   return centralFlat && increasingOnRight; // && decreasingOnLeft;
+}
+
+bool Lidar::isPillarInFront(int (&readings)[READING_LENGTH])
+{
+  int filtered[READING_LENGTH] = {};
+
+  // Step 1: Median filter
+  medianFilter(readings, filtered);
+
+  // Step 2: Clamp spikes
+  clampSpikes(filtered, MAX_SPIKE);
+
+  // Step 3: Remove outliers
+  int avg = getAvg(filtered, 0, READING_LENGTH - 1);
+  removeOutliers(avg, filtered);
+
+  // REMOVE THIS LATER:
+  // for (int i = 0; i < READING_LENGTH; i++)
+  // {
+  //   Serial.print(i);
+  //   Serial.print(": ");
+  //   Serial.println(filtered[i]);
+  // }
+
+  // Step 4: Apply detection logic
+  
+  int values[2] = {};
+
+  findMinAndLocation(filtered, values);
+  int minIndex = values[0];
+  int minValue = values[1];
+
+  if (!(minIndex >= 15 && minIndex <= 25)){
+    Serial.print("min not in accepted range - ");
+    Serial.println(minIndex);
+    return false; 
+  }
+
+  if (minValue >= MAX_PET_DISTANCE || minValue <= MIN_PET_DISTANCE){
+    Serial.println("pet not in allowable distance range");
+    return false; 
+  }
+
+  bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, minIndex - 10, minIndex);
+  bool increasingOnRight = isIncreasing(filtered, DIP_TOLERANCE, INCREASE_THRESHOLD, minIndex + 1, minIndex + 10);
+
+  return increasingOnRight && decreasingOnLeft;
 }

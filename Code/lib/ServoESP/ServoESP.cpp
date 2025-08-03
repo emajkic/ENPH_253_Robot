@@ -11,8 +11,6 @@ ServoESP::ServoESP(int servoPin, Name name, int chassisZero)
     this->chassisZero = chassisZero; 
 
     this->attached = false;
-    this->absoluteAngle = 0; 
-    this->relativeAngle = -chassisZero; // talk abt 
 }
 
 /*
@@ -43,6 +41,11 @@ boolean ServoESP::attach()
         ledcSetup(pwmChannelLR, SERVO_FREQ, SERVO_RESOLUTION);
         ledcAttachPin(servoPin, pwmChannelLR);
         this->pwmChannel = pwmChannelLR;
+        break;
+    case Name::CLAMP:
+        ledcSetup(pwmChannelClamp, SERVO_FREQ, SERVO_RESOLUTION);
+        ledcAttachPin(servoPin, pwmChannelClamp);
+        this->pwmChannel = pwmChannelClamp;
         break;
     default:
         break;

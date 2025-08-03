@@ -106,8 +106,17 @@ void Claw::homeTheta()
     {
         while (!homed)
         {
-            thetaMotor.setSpeed(10, ThetaDirection::CW); // Move to home position
-            currentPos = encoderPos;
+            if (lastDir == (ThetaDirection::CCW))
+            {
+                thetaMotor.setSpeed(10, ThetaDirection::CW); // Move to home position
+                currentPos = encoderPos;
+            }
+            else
+            {
+                thetaMotor.setSpeed(10, ThetaDirection::CCW); 
+                currentPos = encoderPos;
+            }
+
             // Serial.println(currentPos);
         }
         thetaMotor.stop(); // Stop the servo after homing
@@ -293,10 +302,12 @@ void Claw::moveTheta(int theta, int speed)
     if ((theta - currentPos + 96) % 96 <= (currentPos - theta + 96) % 96)
     {
         direction = ThetaDirection::CCW;
+        lastDir = direction; 
     }
     else
     {
         direction = ThetaDirection::CW;
+        lastDir = direction; 
     }
 
     while (currentPos != theta)

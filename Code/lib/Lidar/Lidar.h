@@ -42,6 +42,11 @@ public:
     double petSearchWindow();
 
     /*
+    * Searches for the pillar
+    */
+    double petSearchPillar();
+
+    /*
     * Sweeps the servo while the lidar takes readings at each angular position, with the readings recorded in the array passed in
     *
     * @param startangle     the angle at which to start the lidar's sweep (relative to chassisZero)
@@ -49,6 +54,10 @@ public:
     * @param readings       the array in which to store the readings (distances in mm)
     */
     void sweepReading(int startAngle, int endAngle, int (&readings)[READING_LENGTH]);
+
+    //MAKE PRIVATE POST TESTING:
+
+    bool isPillarInFront(int (&readings)[READING_LENGTH]); 
 
 private:
     VL53L1X sensor;
@@ -64,12 +73,15 @@ private:
     void clampSpikes(int (&data)[READING_LENGTH], int maxStep = 100);
     int getAvg(int (&array)[READING_LENGTH], int startIndex, int endIndex);
     void removeOutliers(int avg, int (&distances)[READING_LENGTH]);
+    void findMinAndLocation(int (&distances)[READING_LENGTH], int (&values)[2]); 
+    
 
     bool centralFlatSection(int (&distances)[READING_LENGTH]);
     bool isIncreasing(int (&array)[READING_LENGTH], int dipTolerance, int overallThreshold, int startIndex, int endIndex);
     bool isDecreasing(int (&array)[READING_LENGTH], int bumpTolerance, int overallThreshold, int startIndex, int endIndex);
     
     bool isPetInFront(int (&readings)[READING_LENGTH]);
+   // bool isPillarInFront(int (&readings)[READING_LENGTH]);
 };
 
 #endif
