@@ -6,7 +6,8 @@
 
 #include <Arduino.h>
 
-enum class ThetaDirection { 
+enum class ThetaDirection
+{
     CW,
     CCW
 };
@@ -17,23 +18,30 @@ public:
     ServoContinuous(int servoPin);
 
     /*
-    Sets servo speed - takes in an integer between 0 and 65, and the direction (CW or CCW)
-    */
+     * Sets servo speed and direction. If valid direction is not provided, will set the speed to 0.
+     *
+     * @param speed         int in [0,65]
+     * @param direction     CW or CCW; dir in which the motor should spin
+     */
     void setSpeed(int speed, ThetaDirection direction);
 
     /*
-    Attch servo object to a PWM channel
-    */
+     * Attach servo object to a PWM channel
+     *
+     * @return true if successfully attached, false otherwise
+     */
     boolean attach();
 
     /*
-    Detach servo from it's PWMS channel
-    */
+     * Detach servo object to a PWM channel
+     *
+     * @return true if successfully detached, false otherwise
+     */
     boolean detach();
 
     /*
-    Sets speed to 0
-    */
+     * Sets speed to 0
+     */
     void stop();
 
 private:

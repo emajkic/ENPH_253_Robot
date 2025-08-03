@@ -65,7 +65,7 @@ bool Lidar::stop()
 /*
  * Searches for all pets aside from the window; this makes the servo sweep, take in the lidar reading, and check if it is a pet
  *
- * @return the distance to the pet, but if no pet found, return 0.0
+ * @return the distance to the pet in cm, but if no pet found, return 0.0
  */
 double Lidar::petSearchRegular()
 {
@@ -82,7 +82,7 @@ double Lidar::petSearchRegular()
     distance = getAvg(readings, 15, 25); // was just readings[20] --> see if this is better
   }
 
-  return distance;
+  return distance / 10; // convert to cm (all readings in mm) --> this is for compatibility with the claw functions later
 }
 
 /*
@@ -288,7 +288,7 @@ bool Lidar::isPetInFront(int (&readings)[READING_LENGTH])
   //   Serial.print(": ");
   //   Serial.println(filtered[i]);
   // }
-  
+
   // Step 4: Apply detection logic
   bool centralFlat = centralFlatSection(filtered);
   // bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, 0, READING_LENGTH / 2 - FLAT_SECTION_LENGTH / 2);
