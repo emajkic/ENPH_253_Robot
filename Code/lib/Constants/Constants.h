@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-// Speed Settings
+// Speed Settings //
 const int BASE_SPEED_L = 1400;  
 const int BASE_SPEED_R = 1400;
 const int MAX_SPEED = 4000;
@@ -20,6 +20,11 @@ const int KD_LINE_FOLLOWER = 80;
 // ServoESP //
 const int SERVO_FREQ = 50;       // 50 Hz = 20 ms period (standard for servos)
 const int SERVO_RESOLUTION = 12; // 12-bit resolution (0–4096)
+
+// Sonar //
+const int SONAR_BASE_DIST = 5; // [cm] CHECK THIS *******************************
+const int SONAR_RAMP_INCREASE = 2; // [cm] CHECK THIS *******************************
+const int SONAR_DEBRIS_INCREASE = 2; // [cm] CHECK THIS *******************************
 
 // Claw //
 const int X_BASKET = 10; 
@@ -72,6 +77,5 @@ const int DECREASE_THRESHOLD = 2; // [mm]
 const int INCREASE_THRESHOLD = 2; // [mm]
 
 const int READING_LENGTH = 40; // [entries or degrees of servo rotation]
-
 
 #endif

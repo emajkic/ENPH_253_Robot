@@ -4,6 +4,16 @@
 #include <Arduino.h>
 #include <iostream>
 
+#include "Constants.h"
+#include "Claw.h"
+#include "Lidar.h"
+#include "Motor.h"
+#include "PID.h"
+#include "PinSetup.h"
+#include "ServoContinuous.h"
+#include "ServoESP.h"
+#include "Sonar.h"
+
 // State interface (Abstract Class -> Concrete implementations for each enumerated state)
 class State {
     public: 

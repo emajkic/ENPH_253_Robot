@@ -5,7 +5,7 @@
 
 class State2 : public State {
     public:
-        State2(State* nextState);
+        State2(State* nextState, PID* pid, Lidar* lidarR);
 
         void execute() override;
 
@@ -14,6 +14,9 @@ class State2 : public State {
     private:
         State* nextState;    
         unsigned long stateStartTime;
+
+        PID* pid;
+        Lidar* lidarR;
 };
 
 #endif

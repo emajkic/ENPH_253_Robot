@@ -14,6 +14,20 @@ class Sonar {
         */
         int getDistance();
 
+        /*
+        * Check if on ramp
+        *
+        * @return true if ramp detected
+        */
+        bool rampDetected();
+
+        /*
+        * Check if on debris
+        *
+        * @return true if debris detected
+        */
+        bool debrisDetected();
+
     private:
         int trigPin;
         int echoPin;
