@@ -1,11 +1,11 @@
 #include "States/State2.h"
 
-State2::State2() {
-    this->stateStartTime = micros();
+State2::State2(State* nextState) {
+    this->nextState = nextState;
  }
 
 void State2::execute() {
-    Serial.println("In state 2!");
+    
 }
 
 State* State2::getNextState() {

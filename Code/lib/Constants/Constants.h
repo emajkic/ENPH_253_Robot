@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 // Speed Settings
-const int BASE_SPEED_L = 1300;  
-const int BASE_SPEED_R = 1300;
+const int BASE_SPEED_L = 1400;  
+const int BASE_SPEED_R = 1400;
 const int MAX_SPEED = 4000;
 const int MIN_SPEED = 1000;
 
@@ -41,7 +41,7 @@ const int THETA_ARCHWAY = 0;
 const double HALL_MIDPOINT = 4096 * 2 / 3.3; // because the midpoint moved to 2 --> check with acc circuit that this is consistent behaviour 
 const double HALL_THRESHOLD = 4096 * 1 / 3.3; 
 
-const int HALL_SWEEP_LENGTH = 6; // change this in testing --> feels reasonable to me now (this means move 3 clicks in either dir)
+const int HALL_SWEEP_LENGTH = 6; // change this in testing --> feels reasonable to me now (this means move 3 clicks in either dir) 
 
 // Continuous Servo // 
 const int SERVO_CONT_FREQ = 250;

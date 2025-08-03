@@ -30,29 +30,33 @@ Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 Utils utils;
 
 // STATE CREATION (Reverse Chronological) //
-State2 state2;
-State1 state1(&state2);
+// State3 state3();
+// State2 state2(&state3, &pid, &lidarRight);
+// State1 state1(&state2);
 
-State* currentState = &state1;
+// State* currentState = &state1;
 
 void setup() {
     Serial.begin(115200);
 
     // INITIALIZATION //
-    utils.beginWire();
+    // utils.beginWire();
     utils.initializePins();
 
-    lidarLeft.initialiseLidar();
-    lidarRight.initialiseLidar();
+    // lidarLeft.initialiseLidar();
+    // lidarRight.initialiseLidar();
 
     // HOMING //
-    servoLidarLeft.moveServoChassis(0);
-    servoLidarRight.moveServoChassis(0);
+    // servoLidarLeft.moveServoChassis(0);
+    // servoLidarRight.moveServoChassis(0);
     
     // claw.home()'
 }
 
 void loop() { 
+    // pid.usePID();
+    motorL.setSpeed(1400, Direction::FORWARD);
+    motorR.setSpeed(1400, Direction::FORWARD);
     // currentState->execute();
     // currentState = currentState->getNextState();
 }
