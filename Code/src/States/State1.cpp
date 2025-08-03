@@ -9,13 +9,12 @@ void State1::execute() {
 }
 
 State* State1::getNextState() {
-    unsigned long ct = millis();
 
-    if (ct - stateStartTime < 4000) { //4 secs
-        Serial.println("State 1 ret itself");
-        return this;
-    } else {
-        Serial.println("State 1 ret next state");
-        return this->nextState;
-    }
+    // if (ct - stateStartTime < 4000) { //4 secs
+    //     Serial.println("State 1 ret itself");
+    //     return this;
+    // } else {
+    //     Serial.println("State 1 ret next state");
+    //     return this->nextState;
+    // }
 }

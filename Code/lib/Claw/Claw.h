@@ -81,7 +81,7 @@ public:
      *
      * The function will sweep the head of the claw from currrentPos-HALL_SWEEP_LENGTH/2 to currentPos+HALL_SWEEP_LENGTH/2
      */
-    void sweepForHall();
+    bool sweepForHall();
 
     // encoder:
 

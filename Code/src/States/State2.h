@@ -5,14 +5,14 @@
 
 class State2 : public State {
     public:
-        State2();
+        State2(State* nextState);
 
         void execute() override;
 
         State* getNextState() override;
 
     private:
-        // State& nextState;    
+        State* nextState;    
         unsigned long stateStartTime;
 };
 
