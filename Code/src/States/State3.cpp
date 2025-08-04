@@ -7,11 +7,20 @@ State3::State3(State* nextState, Claw* claw, Lidar* lidarR) {
     this->lidarR = lidarR;
 }
 
+bool moveOn = false;
+
 void State3::execute() {
-    double dist = lidarR->petSearchRegular();
+    bool hallFound = claw->sweepForHall();
+
+    if (hallFound) {
+        claw->clamp();
+    } else {
+
+    }
 
     // claw->moveClaw(dist, );
 }
 
 State* State3::getNextState() {
+
 }

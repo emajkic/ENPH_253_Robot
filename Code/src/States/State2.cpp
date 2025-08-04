@@ -20,8 +20,7 @@ State* State2::getNextState() {
         motorL->stop();
         motorR->stop();
 
-        // Pet pickup then move on
-        claw->moveClaw(petDistance, Y_SHORT_PET, 90);
+        claw->moveClaw(petDistance, Y_SHORT_PET, THETA_RIGHT_PET);
 
         return this->nextState;
     } else {
