@@ -37,11 +37,6 @@ ServoESP claw1Servo(CLAW_SERVO_1_PIN, Name::CLAW1, 0);
 ServoESP claw2Servo(CLAW_SERVO_2_PIN, Name::CLAW2, 0); 
 ServoESP clampServo(CLAMP_SERVO_PIN, Name::CLAMP, 0); 
 
-ServoContinuous thetaMotor(CONT_SERVO_PIN); 
-
-Claw claw(claw1Servo, claw2Servo, clampServo, thetaMotor); 
-
-
 Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
 Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 
@@ -73,42 +68,33 @@ void setup() {
 
     //lidarLeft.initialiseLidar();
     //lidarRight.initialiseLidar();
-=======
-    motorL.setSpeed(1400, Direction::FORWARD);
-    motorR.setSpeed(1400, Direction::FORWARD);
 
     // lidarLeft.initialiseLidar();
     // lidarRight.initialiseLidar();
->>>>>>> 3c4d0c4226b1f31d244153fd9434ed75cbd75ae4
 
     // HOMING //
     //servoLidarLeft.moveServoChassis(0);
     // servoLidarRight.moveServoChassis(0); 
 
-    delay(1000); 
+//     delay(1000); 
 
-    claw.moveClaw(20,15,0); 
+//     claw.moveClaw(20,15,0); 
 
-    delay(2000);
+//     delay(2000);
 
-   claw.moveClaw(20,20,0); 
+//    claw.moveClaw(20,20,0); 
 
-   delay(2000);
+//    delay(2000);
 
-   claw.moveClaw(30,5,0); 
-}
-
-void loop() { 
-    // pid.usePID();
-    //motorL.setSpeed(1400, Direction::FORWARD);
-    //motorR.setSpeed(1400, Direction::FORWARD);
-=======
-    // claw.home();
+//    claw.moveClaw(30,5,0); 
 }
 
 void loop() {
     pid.usePID();
-    // unsigned long now = millis();
+
+    // motorL.setSpeed(1400, Direction::FORWARD);
+    // motorR.setSpeed(1400, Direction::FORWARD);
+
 
     // lastleft = currleft;
     // lastright = currright;
@@ -158,7 +144,6 @@ void loop() {
     //     delay(2000);
     // }   
 
->>>>>>> 3c4d0c4226b1f31d244153fd9434ed75cbd75ae4
     // currentState->execute();
     // currentState = currentState->getNextState();
 

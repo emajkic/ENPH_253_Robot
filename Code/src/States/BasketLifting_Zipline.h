@@ -6,7 +6,7 @@
 
 class BasketLifting_Zipline : public State {
     public:
-        BasketLifting_Zipline(State* nextState, Motor* leftMotor, Motor* rightMotor, Motor* liftMotor1, Motor* liftMotor2);
+        BasketLifting_Zipline(State* nextState, Motor* leftMotor, Motor* rightMotor);
 
         void execute() override;
 
@@ -18,8 +18,6 @@ class BasketLifting_Zipline : public State {
 
         Motor* leftMotor; 
         Motor* rightMotor; 
-        Motor* liftMotor1; 
-        Motor* liftMotor2; 
 };
 
 #endif

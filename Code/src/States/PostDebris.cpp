@@ -1,7 +1,7 @@
 #include "States/PostDebris.h"
 // put next state here: #include
 
-bool moveToNext = false;
+bool moveToNextDeb = false;
 
 PostDebris::PostDebris(State *nextState, Sonar *sonar, PID *pid, Motor *leftMotor, Motor *rightMotor)
 {
@@ -41,12 +41,12 @@ void PostDebris::execute()
 
     pid->usePID(); // once found, resume PID (should this be in the next state?)
 
-    moveToNext = true;
+    moveToNextDeb = true;
 }
 
 State *PostDebris::getNextState()
 {
-    if (!moveToNext)
+    if (!moveToNextDeb)
     {
         return this;
     }

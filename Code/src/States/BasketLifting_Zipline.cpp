@@ -1,52 +1,41 @@
 #include "States/BasketLifting_Zipline.h"
 // put next state here: #include
 
-bool moveToNext = false;
+bool moveToNextZip = false;
 
-BasketLifting_Zipline::BasketLifting_Zipline(State *nextState, Sonar *sonar, PID *pid, Motor *leftMotor, Motor *rightMotor)
+BasketLifting_Zipline::BasketLifting_Zipline(State* nextState, Motor* leftMotor, Motor* rightMotor)
 {
     this->nextState = nextState;
 
-    this->sonar = sonar;
-    this->pid = pid;
+    this->leftMotor = leftMotor; 
+    this->rightMotor = rightMotor; 
 }
 
 void BasketLifting_Zipline::execute()
 {
-    // this will be triggered when we exit the debris
+// this will be triggered when we have placed pet 7 in the basket 
 
-    /*
-    while the readings from the QRDs both do not have the line
-    turn both motors at the same speed (slow) so it turns left for a set amt of time (left motor forwards, right back)
-    do the same to turn right
-    wherever it sees the line, immediately stop the chassis
-    do pid
-    */
+  // 1. Lift basket 
+  // danny has the code written for this -> get him to send it 
 
-    unsigned long startTime = millis();
+  // 2. move back until basket switches connected to platform read LO (do these exist yet?), then stop
 
-    while (digitalRead(QRD_PIN_LEFT) && digitalRead(QRD_PIN_RIGHT))
-    {
-        if (millis() - startTime > LEFT_TURNING_TIME_DEBRIS) // all in milliseconds
-        {
-            leftMotor->setSpeed(MIN_SPEED, Direction::FORWARD);
-            rightMotor->setSpeed(MIN_SPEED, Direction::BACKWARD);
-        }
-        else
-        {
-            leftMotor->setSpeed(MIN_SPEED, Direction::BACKWARD);
-            rightMotor->setSpeed(MIN_SPEED, Direction::FORWARD);
-        }
-    }
+  while (digitalRead(BASKET_SWITCH_PIN)) { // bc basket lifting onto zipline means the switch will be release and we'll have that be LO
+    leftMotor->setSpeed(MIN_SPEED, Direction::BACKWARD); 
+    rightMotor->setSpeed(MIN_SPEED, Direction::BACKWARD); 
 
-    pid->usePID(); // once found, resume PID (should this be in the next state?)
+  }
 
-    moveToNext = true;
+  leftMotor->stop(); 
+  rightMotor->stop(); 
+   
+
+    moveToNextZip = true;
 }
 
 State *BasketLifting_Zipline::getNextState()
 {
-    if (!moveToNext)
+    if (!moveToNextZip)
     {
         return this;
     }
