@@ -27,6 +27,8 @@ const int SONAR_RAMP_INCREASE = 1; // [mm] CHECK THIS **************************
 const int SONAR_DEBRIS_INCREASE = 5; // [mm] CHECK THIS ******************************* --> checked just need to verify with actual chassis
 
 // Claw //
+const int Y_SHORT_PET = 15;
+const int Y_TALL_PET = 30; //check
 const int X_BASKET = 10; 
 const int Y_BASKET = 10; // [cm] measure on chassis ******************************** !!!!!!!! **************
 const int THETA_BASKET = 270; 
@@ -50,7 +52,6 @@ const int THETA_RAMP = 72;
 const int X_WINDOW = 32;
 const int Y_WINDOW = 1; 
 const int THETA_WINDOW = 50; // THIS IS A PLACEHOLDER
-
 
 const double HALL_MIDPOINT = 4096 * 2 / 3.3; // because the midpoint moved to 2 --> check with acc circuit that this is consistent behaviour 
 const double HALL_THRESHOLD = 4096 * 1 / 3.3; 
