@@ -24,6 +24,15 @@ Sonar sonar(TRIG_PIN, ECHO_PIN);
 ServoESP servoLidarLeft(SERVO_LIDAR_LEFT_PIN, Name::LIDAR_LEFT, 90); //CHANGE CHASSIS_ZERO
 ServoESP servoLidarRight(SERVO_LIDAR_RIGHT_PIN, Name::LIDAR_RIGHT, 100);
 
+ServoESP claw1Servo(CLAW_SERVO_1_PIN, Name::CLAW1, 0); 
+ServoESP claw2Servo(CLAW_SERVO_2_PIN, Name::CLAW2, 0); 
+ServoESP clampServo(CLAMP_SERVO_PIN, Name::CLAMP, 0); 
+
+ServoContinuous thetaMotor(CONT_SERVO_PIN); 
+
+Claw claw(claw1Servo, claw2Servo, clampServo, thetaMotor); 
+
+
 Lidar lidarLeft(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_LEFT, 0X2A, servoLidarLeft);
 Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 
@@ -40,23 +49,47 @@ void setup() {
     Serial.begin(115200);
 
     // INITIALIZATION //
-    // utils.beginWire();
+    utils.beginWire();
     utils.initializePins();
 
-    // lidarLeft.initialiseLidar();
-    // lidarRight.initialiseLidar();
+   // claw.homeXY(); 
+
+    //lidarLeft.initialiseLidar();
+    //lidarRight.initialiseLidar();
 
     // HOMING //
-    // servoLidarLeft.moveServoChassis(0);
+    //servoLidarLeft.moveServoChassis(0);
     // servoLidarRight.moveServoChassis(0);
     
-    // claw.home()'
+    // claw1Servo.moveServo(64*1.5); 
+    // claw2Servo.moveServo(52*1.5); 
+
+    delay(1000); 
+
+    claw.moveClaw(20,15,0); 
+
+    delay(2000);
+
+   claw.moveClaw(20,20,0); 
+
+   delay(2000);
+
+   claw.moveClaw(30,5,0); 
 }
 
 void loop() { 
     // pid.usePID();
-    motorL.setSpeed(1400, Direction::FORWARD);
-    motorR.setSpeed(1400, Direction::FORWARD);
+    //motorL.setSpeed(1400, Direction::FORWARD);
+    //motorR.setSpeed(1400, Direction::FORWARD);
     // currentState->execute();
     // currentState = currentState->getNextState();
+
+    // int dist = sonar.getDistance(); 
+    // Serial.println(dist); 
+    
+    // Serial.println(sonar.debrisDetected());
+
+   // Serial.println(lidarLeft.petSearchPillar()); 
+   //servoLidarLeft.moveServoChassis(0); 
+
 }
