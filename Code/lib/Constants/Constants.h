@@ -87,4 +87,9 @@ const int INCREASE_THRESHOLD = 2; // [mm]
 
 const int READING_LENGTH = 40; // [entries or degrees of servo rotation]
 
+
+// Debris //
+
+const int LEFT_TURNING_TIME_DEBRIS = 50; // measured in loop iterations for now 
+
 #endif
