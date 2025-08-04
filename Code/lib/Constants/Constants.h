@@ -43,6 +43,15 @@ const int X_ARCHWAY = 0;
 const int Y_ARCHWAY = 0;
 const int THETA_ARCHWAY = 0;
 
+const int X_RAMP = 33;
+const int Y_RAMP = 10; 
+const int THETA_RAMP = 72;
+
+const int X_WINDOW = 32;
+const int Y_WINDOW = 1; 
+const int THETA_WINDOW = 50; // THIS IS A PLACEHOLDER
+
+
 const double HALL_MIDPOINT = 4096 * 2 / 3.3; // because the midpoint moved to 2 --> check with acc circuit that this is consistent behaviour 
 const double HALL_THRESHOLD = 4096 * 1 / 3.3; 
 

@@ -62,6 +62,16 @@ public:
     void archwayPosition();
 
     /*
+     * Moves claw to it's window position
+     */
+    void windowPosition();
+
+    /*
+     * Moves claw to it's ramp drop-off position
+     */
+    void rampPosition();
+
+    /*
      * Clamp the pet once hall signal detected
      */
     void clamp();
