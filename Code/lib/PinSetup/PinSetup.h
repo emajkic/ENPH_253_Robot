@@ -32,15 +32,15 @@ const int SERVO_LIDAR_LEFT_PIN = 9;
 const int SERVO_LIDAR_RIGHT_PIN = 10;
 
 // Reflectance Circuit //
-const int QRD_PIN_LEFT = 34; 
-const int QRD_PIN_RIGHT = 35; 
+const int QRD_PIN_LEFT = 35; 
+const int QRD_PIN_RIGHT = 34; 
 
 // Hall Effect //
 const int HALL_OUTPUT_PIN = 38;
 
 // Motor Control - H-Bridges //
-const int MOTOR_LEFT_F_PIN = 32;
-const int MOTOR_LEFT_B_PIN = 33;
+const int MOTOR_LEFT_F_PIN = 33;
+const int MOTOR_LEFT_B_PIN = 32;
 const int MOTOR_RIGHT_F_PIN = 25;
 const int MOTOR_RIGHT_B_PIN = 26;
 
