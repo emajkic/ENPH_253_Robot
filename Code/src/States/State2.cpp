@@ -10,7 +10,7 @@ State2::State2(State* nextState, Claw* claw, PID* pid, Lidar* lidarR, Motor* mot
  }
 
 void State2::execute() {
-    pid->usePID();    
+    pid->usePID(BASE_SPEED);    
 }
 
 State* State2::getNextState() {

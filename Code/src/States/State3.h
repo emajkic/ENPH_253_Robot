@@ -15,6 +15,9 @@ class State3 : public State {
         State* nextState;    
         unsigned long stateStartTime;
 
+        bool moveOn;
+        bool timerStart;
+
         Claw* claw;
         Lidar* lidarR;
 };

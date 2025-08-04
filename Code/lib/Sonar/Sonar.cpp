@@ -35,7 +35,22 @@ int Sonar::getDistance() {
 bool Sonar::rampDetected() {
     int dist = getDistance();
 
-    if (dist == (SONAR_BASE_DIST + SONAR_RAMP_INCREASE)) {
+    if (dist == (SONAR_BASE_DIST - SONAR_RAMP_INCREASE)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/*
+* Check if off ramp
+*
+* @return true if ramp end detected
+*/
+bool Sonar::endRampDetected() {
+    int dist = getDistance();
+
+    if (dist == (SONAR_BASE_DIST + SONAR_RAMP_END)) {
         return true;
     } else {
         return false;
@@ -50,7 +65,7 @@ bool Sonar::rampDetected() {
 bool Sonar::debrisDetected() {
     int dist = getDistance();
 
-    if (dist >= (SONAR_BASE_DIST + SONAR_DEBRIS_INCREASE)) { // bc when it actually gets there, it sees super close ie very far bc the sound can't come back 
+    if (dist >= (SONAR_BASE_DIST - SONAR_DEBRIS_INCREASE)) { // bc when it actually gets there, it sees super close ie very far bc the sound can't come back 
         return true;
     } else {
         return false;

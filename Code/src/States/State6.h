@@ -1,11 +1,11 @@
-#ifndef State5_h
-#define State5_h
+#ifndef State6_h
+#define State6_h
 
 #include "State.h"
 
-class State5 : public State {
+class State6 : public State {
     public:
-        State5(State* nextState, PID* pid, Claw* claw, Sonar* sonar);
+        State6(State* nextState, PID* pid, Lidar* lidarL, Claw* claw, Motor* motorL, Motor* motorR);
 
         void execute() override;
 
@@ -15,13 +15,11 @@ class State5 : public State {
         State* nextState;    
         unsigned long stateStartTime;
 
-        bool timerStart;
-
         PID* pid;
+        Lidar* lidarL;
+        Claw* claw;
         Motor* motorL;
         Motor* motorR;
-        Claw* claw;
-        Sonar* sonar;
 };
 
 #endif

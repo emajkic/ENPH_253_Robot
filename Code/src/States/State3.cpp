@@ -5,22 +5,33 @@ State3::State3(State* nextState, Claw* claw, Lidar* lidarR) {
     this->nextState = nextState;
     this->claw = claw;
     this->lidarR = lidarR;
+
+    timerStart = false;
+    moveOn = false;
 }
 
-bool moveOn = false;
-
 void State3::execute() {
-    bool hallFound = claw->sweepForHall();
-
-    if (hallFound) {
-        claw->clamp();
-    } else {
-
+    if (!timerStart) {
+        stateStartTime = millis();
+        timerStart = true;
     }
 
-    // claw->moveClaw(dist, );
+    // bool hallFound = claw->sweepForHall();
+
+    if (claw->sweepForHall()) {
+        claw->clamp();
+        moveOn = true;
+    } else if (millis() - stateStartTime > PET_TIMEOUT) {
+        moveOn = true;
+    }
 }
 
 State* State3::getNextState() {
+    if (moveOn) {
+        claw->rampPosition();
 
+        return this->nextState;
+    } else {
+        return this;
+    }
 }

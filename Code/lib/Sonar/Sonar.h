@@ -21,6 +21,14 @@ class Sonar {
         */
         bool rampDetected();
 
+        
+        /*
+        * Check if off ramp
+        *
+        * @return true if ramp end detected
+        */
+        bool endRampDetected();
+
         /*
         * Check if on debris
         *
