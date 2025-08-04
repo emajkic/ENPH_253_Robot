@@ -9,11 +9,11 @@ Sonar::Sonar(int trigPin, int echoPin) {
 /*
 * Get distance sonar reading
 *
-* @return the distance from the sonar to the nearest object [cm]
+* @return the distance from the sonar to the nearest object [mm]
 */
 int Sonar::getDistance() {
     long duration;
-    int distanceCm;
+    int distanceMm;
 
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
@@ -22,9 +22,9 @@ int Sonar::getDistance() {
     digitalWrite(trigPin, LOW);
     
     duration = pulseIn(echoPin, HIGH);
-    distanceCm = duration * 0.034 / 2;
+    distanceMm = duration * 0.034 / 2 * 10;
 
-    return distanceCm;
+    return distanceMm; // now in mm 
 }
 
 /*
@@ -50,7 +50,7 @@ bool Sonar::rampDetected() {
 bool Sonar::debrisDetected() {
     int dist = getDistance();
 
-    if (dist == (SONAR_BASE_DIST + SONAR_DEBRIS_INCREASE)) {
+    if (dist >= (SONAR_BASE_DIST + SONAR_DEBRIS_INCREASE)) { // bc when it actually gets there, it sees super close ie very far bc the sound can't come back 
         return true;
     } else {
         return false;

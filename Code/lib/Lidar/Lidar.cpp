@@ -193,7 +193,7 @@ int Lidar::getAvg(int (&array)[READING_LENGTH], int startIndex, int endIndex)
   {
     sum += array[i];
   }
-  //Serial.println(sum / (endIndex - startIndex + 1));
+  // Serial.println(sum / (endIndex - startIndex + 1));
   return sum / (endIndex - startIndex + 1);
 }
 
@@ -221,15 +221,21 @@ void Lidar::removeOutliers(int avg, int (&distances)[READING_LENGTH])
 
 void Lidar::findMinAndLocation(int (&distances)[READING_LENGTH], int (&values)[2])
 {
-  int min = 2000; 
-  for (int i = 0; i < READING_LENGTH; i++){
-    if (distances[i] <= min){
-      min = distances[i]; 
+  int min = 2000;
+  for (int i = 0; i < READING_LENGTH; i++)
+  {
+    if (distances[i] <= min && i < 30)
+    {
+      min = distances[i];
 
-      values[0] = i; 
-      values[1] = min; 
-
+      values[0] = i;
+      values[1] = min;
     }
+    else if (distances[i] < min && i > 30)
+    {
+      values[0] = i;
+      values[1] = min;
+    } // make it such that the min position is the last occurrence in the array until 30, because if it appears after that it is likely a fluke
   }
 }
 
@@ -349,30 +355,32 @@ bool Lidar::isPillarInFront(int (&readings)[READING_LENGTH])
   removeOutliers(avg, filtered);
 
   // REMOVE THIS LATER:
-  // for (int i = 0; i < READING_LENGTH; i++)
-  // {
-  //   Serial.print(i);
-  //   Serial.print(": ");
-  //   Serial.println(filtered[i]);
-  // }
+  for (int i = 0; i < READING_LENGTH; i++)
+  {
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(filtered[i]);
+  }
 
   // Step 4: Apply detection logic
-  
+
   int values[2] = {};
 
   findMinAndLocation(filtered, values);
   int minIndex = values[0];
   int minValue = values[1];
 
-  if (!(minIndex >= 15 && minIndex <= 25)){
+  if (!(minIndex >= 15 && minIndex <= 30))
+  {
     Serial.print("min not in accepted range - ");
     Serial.println(minIndex);
-    return false; 
+    return false;
   }
 
-  if (minValue >= MAX_PET_DISTANCE || minValue <= MIN_PET_DISTANCE){
+  if (minValue >= MAX_PET_DISTANCE || minValue <= MIN_PET_DISTANCE)
+  {
     Serial.println("pet not in allowable distance range");
-    return false; 
+    return false;
   }
 
   bool decreasingOnLeft = isDecreasing(filtered, BUMP_TOLERANCE, DECREASE_THRESHOLD, minIndex - 10, minIndex);

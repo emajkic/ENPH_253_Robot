@@ -128,13 +128,10 @@ void Claw::homeTheta()
  */
 void Claw::homeXY()
 {
-    unsigned long time1 = millis();
+    
     servo1.moveServo(0);
 
-    while (millis() - time1 < 1000)
-    {
-        // just wait here until first one is done moving
-    }
+    delay(2000); 
 
     servo2.moveServo(0);
 }
@@ -157,14 +154,9 @@ void Claw::moveClaw(int x, int y, int theta)
 
     std::map<std::string, double> angles = getAngles(x - X_OFFSET, y - Y_OFFSET);
 
-    unsigned long time1 = millis();
-
     servo1.moveServo(angles.at("alpha"));
 
-    while (millis() - time1 < 1000)
-    {
-        // just wait here until first one is done moving
-    }
+    delay(2000); 
 
     servo2.moveServo(angles.at("beta"));
 }
@@ -276,11 +268,18 @@ std::map<std::string, double> Claw::getAngles(int x, int y)
     double n = static_cast<double>(y);
     double l = sqrt(m * m + n * n);
 
-    double alpha_rad = -(atan2(n, m) + acos((L2 * L2 - L1 * L1 - l * l) / (-2.0 * L1 * l))) + ALPHA_0;
-    double beta_rad = acos((l * l - L2 * L2 - L1 * L1) / (-2.0 * L2 * L1)) - BETA_0;
+    double alpha_rad = -(std::atan2(n, m) + std::acos((L2 * L2 - L1 * L1 - l * l) / (-2.0 * L1 * l))) + ALPHA_0;
+    double beta_rad = std::acos((l * l - L2 * L2 - L1 * L1) / (-2.0 * L2 * L1)) - BETA_0;
 
-    angles["alpha"] = GEAR_RATIO * alpha_rad * 180.0 / PI; // multiplying by 2 for gear ratio
+    angles["alpha"] = GEAR_RATIO * alpha_rad * 180.0 / PI; 
     angles["beta"] = GEAR_RATIO * beta_rad * 180.0 / PI;
+
+// REMOVE LATER: 
+    Serial.print("alpha:"); 
+    Serial.println(angles.at("alpha")); 
+
+    Serial.print("beta:"); 
+    Serial.println(angles.at("beta")); 
 
     return angles;
 }

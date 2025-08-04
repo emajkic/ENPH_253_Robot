@@ -10,7 +10,7 @@ class Sonar {
         /*
         * Get distance sonar reading
         *
-        * @return the distance from the sonar to the nearest object [cm]
+        * @return the distance from the sonar to the nearest object [mm]
         */
         int getDistance();
 
