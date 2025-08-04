@@ -171,10 +171,7 @@ void Claw::basket()
 
     servo1.moveServo(angles.at("alpha"));
 
-    while (millis() - time1 < 1000)
-    {
-        // just wait here until first one is done moving
-    }
+    delay(1000);
 
     servo2.moveServo(angles.at("beta"));
 
@@ -184,7 +181,7 @@ void Claw::basket()
 }
 
 /*
- * Moves claw to basket (this will be the home position)
+ * Moves claw to window
  */
 void Claw::archwayPosition()
 {
@@ -193,16 +190,43 @@ void Claw::archwayPosition()
 
     servo1.moveServo(angles.at("alpha"));
 
-    while (millis() - time1 < 1000)
-    {
-        // just wait here until first one is done moving
-    }
+    delay(1000);
 
     servo2.moveServo(angles.at("beta"));
 
     moveTheta(THETA_ARCHWAY, 10);
+}
 
-    // SET THESE IN CONSTANTS.H
+/*
+ * Moves claw to widow
+ */
+void Claw::windowPosition()
+{
+    std::map<std::string, double> angles = getAngles(X_WINDOW, Y_WINDOW);
+
+    servo1.moveServo(angles.at("alpha"));
+
+    delay(1000); 
+
+    servo2.moveServo(angles.at("beta"));
+
+    moveTheta(THETA_WINDOW, 10);
+}
+
+/*
+ * Moves claw to widow
+ */
+void Claw::rampPosition()
+{
+    std::map<std::string, double> angles = getAngles(X_RAMP, Y_RAMP);
+
+    servo1.moveServo(angles.at("alpha"));
+
+    delay(1000); 
+
+    servo2.moveServo(angles.at("beta"));
+
+    moveTheta(THETA_RAMP, 10);
 }
 
 /*
