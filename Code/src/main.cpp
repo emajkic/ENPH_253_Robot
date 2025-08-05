@@ -45,11 +45,13 @@ Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 Utils utils;
 
 // STATE CREATION (Reverse Chronological) //
-State7 state7;
+State9 state9;
+State8 state8(&state9, &pid, &lidarLeft, &motorL, &motorR, &claw);
+State7 state7(&state8, &claw);
 State6 state6(&state7, &pid, &lidarLeft, &claw, &motorL, &motorR);
 State5 state5(&state6, &pid, &claw, &sonar);
 State4 state4(&state5, &pid, &sonar);
-State3 state3(&state4, &claw, &lidarRight);
+State3 state3(&state4, &claw);
 State2 state2(&state3, &claw, &pid, &lidarRight, &motorL, &motorR);
 State1 state1(&state2);
 
@@ -79,7 +81,7 @@ void setup() {
 }
 
 void loop() {
-
+    pid.usePID(BASE_SPEED);
     // if (lidarLeft.petSearchRegular() != 0) {
     //     motorL.stop();
     //     motorR.stop();
