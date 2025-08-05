@@ -1,10 +1,9 @@
 #include "States/State3.h"
 #include "States/State4.h"
 
-State3::State3(State* nextState, Claw* claw, Lidar* lidarR) {
+State3::State3(State* nextState, Claw* claw) {
     this->nextState = nextState;
     this->claw = claw;
-    this->lidarR = lidarR;
 
     timerStart = false;
     moveOn = false;

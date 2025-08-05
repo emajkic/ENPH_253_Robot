@@ -5,7 +5,7 @@
 
 class State7 : public State {
     public:
-        State7();
+        State7(State* nextState, Claw* claw);
 
         void execute() override;
 
@@ -14,6 +14,11 @@ class State7 : public State {
     private:
         State* nextState;    
         unsigned long stateStartTime;
+
+        bool timerStart;
+        bool moveOn;
+
+        Claw* claw;
 };
 
 #endif
