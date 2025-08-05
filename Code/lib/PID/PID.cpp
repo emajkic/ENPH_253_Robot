@@ -78,16 +78,20 @@ void PID::doPIDLine(int baseSpeed) {
         newRightSpeed = constrain(newRightSpeed, MIN_SPEED, MAX_SPEED);     
         dirRight = Direction::FORWARD;
     }
-   
+
+    if (count1 >= 1000) {
         // Serial.print("KP = "); Serial.println(this->KP);
         // Serial.print("KD = "); Serial.println(this->KD);
         Serial.print("Error: "); Serial.println(error);
-        // Serial.print("Adjustment: "); Serial.println(adjustement);
-        // Serial.print(" | LeftSpeed: "); Serial.println(newLeftSpeed);
-        // Serial.print(" | RightSpeed: "); Serial.println(newRightSpeed);
-        // Serial.print(" | Right Dir: "); Serial.println(dirRight == Direction::FORWARD);
-        // Serial.print(" | Left Dir: "); Serial.println(dirLeft == Direction::FORWARD);
-       
+        Serial.print("Adjustment: "); Serial.println(adjustement);
+        Serial.print(" | LeftSpeed: "); Serial.println(newLeftSpeed);
+        Serial.print(" | RightSpeed: "); Serial.println(newRightSpeed);
+        Serial.print(" | Right Dir: "); Serial.println(dirRight == Direction::FORWARD);
+        Serial.print(" | Left Dir: "); Serial.println(dirLeft == Direction::FORWARD);
+        count1=0;
+    }
+        
+       count1++;
 
     leftMotor.setSpeed(newLeftSpeed, dirLeft);
     rightMotor.setSpeed(newRightSpeed, dirRight);

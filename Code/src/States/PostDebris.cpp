@@ -1,7 +1,11 @@
 // #include "States/PostDebris.h"
 // // put next state here: #include
 
+<<<<<<< HEAD
+bool moveToNextDeb = false;
+=======
 // bool moveToNext = false;
+>>>>>>> 18f64b00827e4282a68687d90699508ef2eafac8
 
 // PostDebris::PostDebris(State *nextState, Sonar *sonar, PID *pid, Motor *leftMotor, Motor *rightMotor)
 // {
@@ -41,6 +45,22 @@
 
 //     pid->usePID(BASE_SPEED); // once found, resume PID (should this be in the next state?)
 
+<<<<<<< HEAD
+    moveToNextDeb = true;
+}
+
+State *PostDebris::getNextState()
+{
+    if (!moveToNextDeb)
+    {
+        return this;
+    }
+    else
+    {
+        return this->nextState;
+    }
+}
+=======
 //     moveToNext = true;
 // }
 
@@ -55,3 +75,4 @@
 //         return this->nextState;
 //     }
 // }
+>>>>>>> 18f64b00827e4282a68687d90699508ef2eafac8
