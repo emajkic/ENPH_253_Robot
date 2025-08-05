@@ -68,96 +68,21 @@ void setup() {
     utils.beginWire();
     utils.initializePins();
 
-    //lidarLeft.initialiseLidar();
-    //lidarRight.initialiseLidar();
-
-    motorL.setSpeed(1400, Direction::FORWARD);
-    motorR.setSpeed(1400, Direction::FORWARD);
-
     // lidarLeft.initialiseLidar();
     // lidarRight.initialiseLidar();
 
     // HOMING //
-    //servoLidarLeft.moveServoChassis(0);
+    // servoLidarLeft.moveServoChassis(0);
     // servoLidarRight.moveServoChassis(0); 
 
-//     delay(1000); 
-
-//     claw.moveClaw(20,15,0); 
-
-//     delay(2000);
-
-//    claw.moveClaw(20,20,0); 
-
-//    delay(2000);
-
-//    claw.moveClaw(30,5,0); 
-}
-
-void loop() {
-    pid.usePID();
-
-    // motorL.setSpeed(1400, Direction::FORWARD);
-    // motorR.setSpeed(1400, Direction::FORWARD);
-
-
-    // lastleft = currleft;
-    // lastright = currright;
-
-    // currleft = digitalRead(QRD_PIN_LEFT);
-    // currright = digitalRead(QRD_PIN_RIGHT);
-
-    // // Serial.print("(");
-    // // Serial.print(currleft);
-    // // Serial.print(", ");
-    // // Serial.print(currright);
-    // // Serial.println(")");
-
-    // if (currleft == LOW && currright == LOW && lastleft == HIGH && lastright == HIGH) {
-    //     Serial.println("Transition1");
-    //     // Serial.print("(");
-    //     // Serial.print(currleft);
-    //     // Serial.print(", ");
-    //     // Serial.print(currright);
-    //     // Serial.println(")");
-    // }
-
-    // if (now - lastmotorswitch > 5000) {
-    //     if (dir == Direction::FORWARD) {
-    //         dir = Direction::BACKWARD;
-    //         motorL.setSpeed(1400, Direction::BACKWARD);
-    //         motorR.setSpeed(1400, Direction::BACKWARD);
-
-    //     } else {
-    //         dir = Direction::FORWARD;
-    //         motorL.setSpeed(1400, Direction::FORWARD);
-    //         motorR.setSpeed(1400, Direction::FORWARD);
-    //     }
-    //     lastmotorswitch = now;
-    // }
-
-
-    // servoLidarLeft.moveServoChassis(0);
-    // servoLidarRight.moveServoChassis(0);
-    
-    claw.homeTheta();
-    claw.homeXY();
-    claw.unclamp();
-    claw.archwayPosition();
+    // claw.homeTheta();
+    // claw.homeXY();
+    // claw.unclamp();
+    // claw.archwayPosition();
 }
 
 void loop() {
     pid.usePID(BASE_SPEED);
-    // if (lidarLeft.petSearchRegular() != 0) {
-    //     motorL.stop();
-    //     motorR.stop();
-    //     delay(2000);
-    // } else if (lidarRight.petSearchRegular() != 0) {
-    //     motorL.stop();
-    //     motorR.stop();
-    //     delay(2000);
-    // }   
-
     // currentState->execute();
     // currentState = currentState->getNextState();
 }
