@@ -16,6 +16,12 @@
 #include "States/State2.h"
 #include "States/State3.h"
 #include "States/State4.h"
+#include "States/State5.h"
+#include "States/State6.h"
+#include "States/State7.h"
+#include "States/State8.h"
+#include "States/State9.h"
+// #include "States/State10.h"
 
 // OBJECT CREATION //
 Motor motorL(MOTOR_LEFT_F_PIN, MOTOR_LEFT_B_PIN, Side::LEFT); 
@@ -43,31 +49,28 @@ Lidar lidarRight(SDA_LIDAR, SCL_LIDAR, XSHUT_PIN_RIGHT, 0x2B, servoLidarRight);
 Utils utils;
 
 // STATE CREATION (Reverse Chronological) //
-State4 state4;
+State7 state7;
+State6 state6(&state7, &pid, &lidarLeft, &claw, &motorL, &motorR);
+State5 state5(&state6, &pid, &claw, &sonar);
+State4 state4(&state5, &pid, &sonar);
 State3 state3(&state4, &claw, &lidarRight);
 State2 state2(&state3, &claw, &pid, &lidarRight, &motorL, &motorR);
 State1 state1(&state2);
 
-State* currentState = &state1;
-
-unsigned long lastmotorswitch = millis();
-int lastleft;
-int lastright;
-
-int currleft;
-int currright;
-
-Direction dir = Direction::FORWARD;
+State* currentState = &state2; // Skip state1 idle state
 
 void setup() {
     Serial.begin(115200);
 
     // INITIALIZATION //
     utils.beginWire();
-    utils.initializePins(); 
+    utils.initializePins();
 
     //lidarLeft.initialiseLidar();
     //lidarRight.initialiseLidar();
+
+    motorL.setSpeed(1400, Direction::FORWARD);
+    motorR.setSpeed(1400, Direction::FORWARD);
 
     // lidarLeft.initialiseLidar();
     // lidarRight.initialiseLidar();
@@ -132,7 +135,16 @@ void loop() {
     // }
 
 
+    // servoLidarLeft.moveServoChassis(0);
+    // servoLidarRight.moveServoChassis(0);
+    
+    claw.homeTheta();
+    claw.homeXY();
+    claw.unclamp();
+    claw.archwayPosition();
+}
 
+void loop() {
 
     // if (lidarLeft.petSearchRegular() != 0) {
     //     motorL.stop();
@@ -146,13 +158,4 @@ void loop() {
 
     // currentState->execute();
     // currentState = currentState->getNextState();
-
-    // int dist = sonar.getDistance(); 
-    // Serial.println(dist); 
-    
-    // Serial.println(sonar.debrisDetected());
-
-   // Serial.println(lidarLeft.petSearchPillar()); 
-   //servoLidarLeft.moveServoChassis(0); 
-
 }

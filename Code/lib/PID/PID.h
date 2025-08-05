@@ -14,7 +14,7 @@ class PID {
         /*
         * Use PID control loop
         */
-        void usePID();
+        void usePID(int baseSpeed);
 
         /*
         * Set PID error to 0
@@ -49,7 +49,7 @@ class PID {
         Motor &leftMotor;
         Motor &rightMotor;
 
-        void doPIDLine();
+        void doPIDLine(int baseSpeed);
         int getErrorLine(); 
 };
 

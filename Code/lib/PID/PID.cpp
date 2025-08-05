@@ -23,8 +23,8 @@ PID::PID(Motor &leftMotor, Motor &rightMotor) : leftMotor(leftMotor), rightMotor
 /*
 * Use PID control loop
 */
-void PID::usePID() {
-    doPIDLine();
+void PID::usePID(int baseSpeed) {
+    doPIDLine(baseSpeed);
 }
 
 /*
@@ -38,7 +38,7 @@ void PID::resetPID() {
 //DEBUG
 int count1 = 0;
 
-void PID::doPIDLine() {
+void PID::doPIDLine(int baseSpeed) {
     error = getErrorLine();
 
     unsigned long currentTime = micros();
@@ -53,8 +53,8 @@ void PID::doPIDLine() {
     // Adjustements
     int adjustement = ((KP * error) + (KD * derivativeError));
 
-    int newLeftSpeed = BASE_SPEED_L - adjustement;
-    int newRightSpeed = BASE_SPEED_R + adjustement;
+    int newLeftSpeed = baseSpeed - adjustement;
+    int newRightSpeed = baseSpeed + adjustement;
 
     Direction dirLeft;
     Direction dirRight;

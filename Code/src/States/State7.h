@@ -1,11 +1,11 @@
-#ifndef State4_h
-#define State4_h
+#ifndef State7_h
+#define State7_h
 
 #include "State.h"
 
-class State4 : public State {
+class State7 : public State {
     public:
-        State4(State* nextState, PID* pid, Sonar* sonar);
+        State7();
 
         void execute() override;
 
@@ -14,9 +14,6 @@ class State4 : public State {
     private:
         State* nextState;    
         unsigned long stateStartTime;
-
-        PID* pid;
-        Sonar* sonar;
 };
 
 #endif

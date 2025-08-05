@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 // Speed Settings //
-const int BASE_SPEED_L = 1400;  
-const int BASE_SPEED_R = 1400;
+const int BASE_SPEED = 1400; 
+const int RAMP_SPEED = 2000; 
 const int MAX_SPEED = 4000;
 const int MIN_SPEED = 1000;
 
@@ -25,8 +25,11 @@ const int SERVO_RESOLUTION = 12; // 12-bit resolution (0–4096)
 const int SONAR_BASE_DIST = 23; // [mm] CHECK THIS ******************************* --> checked just need to verify with actual chassis
 const int SONAR_RAMP_INCREASE = 1; // [mm] CHECK THIS ******************************* --> checked just need to verify with actual chassis
 const int SONAR_DEBRIS_INCREASE = 5; // [mm] CHECK THIS ******************************* --> checked just need to verify with actual chassis
+const int SONAR_RAMP_END = 5; // [mm] CHECK THIS ******************************* --> checked just need to verify with actual chassis
 
 // Claw //
+const long PET_TIMEOUT = 7000; // 7000 [ms] == 7 [s]
+const long RAMP_DROPOFF_TIME = 2000; // 2000 [ms] = 2 [s]
 
 const int Y_SHORT_PET = 5;
 const int Y_TALL_PET = 20; //check
