@@ -1,29 +1,31 @@
 #include "States/State2.h"
 
-State2::State2(State* nextState, Claw* claw, PID* pid, Lidar* lidarR, Motor* motorL, Motor* motorR) {
+State2::State2(State* nextState, PID* pid, Motor* motorL, Motor* motorR) {
     this->nextState = nextState;
-    this->claw = claw;
     this->pid = pid;
-    this->lidarR = lidarR;
     this->motorL = motorL;
     this->motorR = motorR;
+
+    timerStart = false;
  }
 
 void State2::execute() {
+    if (!timerStart) {
+        stateStartTime = millis();
+        timerStart = true;
+    }
+
     pid->usePID(BASE_SPEED);    
 }
 
 State* State2::getNextState() {
-    double petDistance = lidarR->petSearchRegular();
+    unsigned long now = millis();
 
-    if (petDistance != 0) {
+    if (now - stateStartTime >= 9000) { // 9 sec
         motorL->stop();
         motorR->stop();
-
-        claw->moveClaw(petDistance, Y_SHORT_PET, THETA_RIGHT_PET);
-
         return this->nextState;
     } else {
         return this;
-    }
+    }   
 }

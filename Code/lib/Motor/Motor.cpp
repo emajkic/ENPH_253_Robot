@@ -16,18 +16,18 @@ Motor::Motor(int pinF, int pinB, Side side) { //Should we rename these to pinCCW
     switch (side)
     {
     case Side::LEFT:
-        ledcSetup(pwmChannelFL, 500, 12); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
+        ledcSetup(pwmChannelFL, 50, 12); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
         ledcAttachPin(pinF, pwmChannelFL);
 
-        ledcSetup(pwmChannelBL, 500, 12);
+        ledcSetup(pwmChannelBL, 50, 12);
         ledcAttachPin(pinB, pwmChannelBL);
 
         break;
     case Side::RIGHT:
-        ledcSetup(pwmChannelFR, 500, 12); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
+        ledcSetup(pwmChannelFR, 50, 12); // (pwmchannel to use,  frequency in Hz, number of bits) NOTE: frequency affect speed range
         ledcAttachPin(pinF, pwmChannelFR);
 
-        ledcSetup(pwmChannelBR, 500, 12);
+        ledcSetup(pwmChannelBR, 50, 12);
         ledcAttachPin(pinB, pwmChannelBR);
         break;
     default:
@@ -60,9 +60,7 @@ void Motor::stop() {
 * @param speed         speed to set the motor; fraction between 0-1
 * @param direction     direction to spin with set speed
 */
-void Motor::setSpeed(int speed, Direction direction) {
-    //double s = speed * 4095;
-    
+void Motor::setSpeed(int speed, Direction direction) {    
     switch (direction)
     {
     case Direction::FORWARD:

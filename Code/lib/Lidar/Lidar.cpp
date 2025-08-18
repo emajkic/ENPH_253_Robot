@@ -12,6 +12,8 @@ Lidar::Lidar(int sdaPin, int sclPin, int xshutPin, uint8_t i2cAddress, ServoESP 
     : sclPin(sclPin), sdaPin(sdaPin), xshutPin(xshutPin), address(i2cAddress), servo(servo)
 {
   servo.attach();
+  risingEdgeCount = 0;
+  previousDistance = 0;
 }
 
 /*
@@ -128,8 +130,9 @@ void Lidar::sweepReading(int startAngle, int endAngle, int (&readings)[READING_L
   for (int angle = startAngle; angle <= endAngle; angle += ANGULAR_STEP)
   {
     this->servo.moveServoChassis(angle);
-    uint16_t reading = singleMeasurement();
-    readings[angle - startAngle] = reading;
+    //delay(50);
+   uint16_t reading = singleMeasurement();
+   readings[angle - startAngle] = reading;
   }
 }
 
@@ -357,9 +360,9 @@ bool Lidar::isPillarInFront(int (&readings)[READING_LENGTH])
   // REMOVE THIS LATER:
   for (int i = 0; i < READING_LENGTH; i++)
   {
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(filtered[i]);
+    // Serial.print(i);
+    // Serial.print(": ");
+    // Serial.println(filtered[i]);
   }
 
   // Step 4: Apply detection logic
@@ -373,13 +376,13 @@ bool Lidar::isPillarInFront(int (&readings)[READING_LENGTH])
   if (!(minIndex >= 15 && minIndex <= 30))
   {
     Serial.print("min not in accepted range - ");
-    Serial.println(minIndex);
+    // Serial.println(minIndex);
     return false;
   }
 
   if (minValue >= MAX_PET_DISTANCE || minValue <= MIN_PET_DISTANCE)
   {
-    Serial.println("pet not in allowable distance range");
+    // Serial.println("pet not in allowable distance range");
     return false;
   }
 
@@ -387,4 +390,26 @@ bool Lidar::isPillarInFront(int (&readings)[READING_LENGTH])
   bool increasingOnRight = isIncreasing(filtered, DIP_TOLERANCE, INCREASE_THRESHOLD, minIndex + 1, minIndex + 10);
 
   return increasingOnRight && decreasingOnLeft;
+}
+
+double Lidar::petSearchStatic() {
+  double petDist = 0.0;
+
+  double probe = singleMeasurement();
+
+  if (previousDistance - probe > 100) {
+    risingEdgeCount++;
+
+    if (risingEdgeCount == 2) {
+      if (probe >= PET_DIST - 100 && 
+          probe <= PET_DIST + 100) {
+        petDist = probe;
+      }
+    }
+  }
+  
+  previousDistance = probe;
+
+
+  return petDist;
 }

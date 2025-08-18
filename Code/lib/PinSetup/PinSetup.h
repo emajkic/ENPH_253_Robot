@@ -25,11 +25,11 @@ const int TRIG_PIN = 19; // Sonar
 const int ECHO_PIN = 20;
 
 // Lidar //
-const int XSHUT_PIN_LEFT = 7;
-const int XSHUT_PIN_RIGHT = 8;
+const int XSHUT_PIN_LEFT = 8;
+const int XSHUT_PIN_RIGHT = 7;
 
-const int SERVO_LIDAR_LEFT_PIN = 9;
-const int SERVO_LIDAR_RIGHT_PIN = 10;
+const int SERVO_LIDAR_LEFT_PIN = 10;
+const int SERVO_LIDAR_RIGHT_PIN = 9;
 
 // Reflectance Circuit //
 const int QRD_PIN_LEFT = 35; 
@@ -47,8 +47,8 @@ const int MOTOR_RIGHT_B_PIN = 26;
 // Claw //
 const int CLAW_SERVO_1_PIN = 27;
 const int CLAW_SERVO_2_PIN = 0;
-const int ROTARY_IN_CLK_PIN = 36;
-const int ROTARY_IN_DT_PIN = 39;
+const int ROTARY_IN_CLK_PIN = 39;
+const int ROTARY_IN_DT_PIN = 36;
 const int CLAW_HOME_SWITCH_PIN = 4;
 
 const int CONT_SERVO_PIN = 12; // "Rotary Motor"

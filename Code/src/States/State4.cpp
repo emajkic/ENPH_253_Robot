@@ -1,10 +1,9 @@
 #include "States/State4.h"
 #include "States/State5.h"
 
-State4::State4(State* nextState, PID* pid, Sonar* sonar) {
+State4::State4(State* nextState, PID* pid) {
     this->nextState = nextState;
     this->pid = pid;
-    this->sonar = sonar;
 }
 
 void State4::execute() {
@@ -12,9 +11,5 @@ void State4::execute() {
 }
 
 State* State4::getNextState() {
-    if (sonar->rampDetected()) {
-        return this->nextState;
-    } else {
-        return this;
-    }
+    return this;
 }

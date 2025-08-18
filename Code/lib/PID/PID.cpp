@@ -35,9 +35,7 @@ void PID::resetPID() {
     this->lastError = 0.0;
 }
 
-//DEBUG
 int count1 = 0;
-
 void PID::doPIDLine(int baseSpeed) {
     error = getErrorLine();
 
@@ -79,24 +77,21 @@ void PID::doPIDLine(int baseSpeed) {
         dirRight = Direction::FORWARD;
     }
 
-    if (count1 >= 1000) {
-        // Serial.print("KP = "); Serial.println(this->KP);
-        // Serial.print("KD = "); Serial.println(this->KD);
-        Serial.print("Error: "); Serial.println(error);
-        Serial.print("Adjustment: "); Serial.println(adjustement);
-        Serial.print(" | LeftSpeed: "); Serial.println(newLeftSpeed);
-        Serial.print(" | RightSpeed: "); Serial.println(newRightSpeed);
-        Serial.print(" | Right Dir: "); Serial.println(dirRight == Direction::FORWARD);
-        Serial.print(" | Left Dir: "); Serial.println(dirLeft == Direction::FORWARD);
-        count1=0;
-    }
+    // if (count1 >= 10000) {
+    //     Serial.print("Left speed: ");
+    //     Serial.println(newLeftSpeed);
+    //     Serial.print("Right speed: ");
+    //     Serial.println(newRightSpeed);
+    //     count1 = 0;
+    // }
         
-       count1++;
+    count1++;
 
     leftMotor.setSpeed(newLeftSpeed, dirLeft);
     rightMotor.setSpeed(newRightSpeed, dirRight);
 }   
 
+int count2 = 0;
 int PID::getErrorLine() {
     int leftReading = digitalRead(QRD_PIN_LEFT);
     int rightReading = digitalRead(QRD_PIN_RIGHT);
@@ -116,6 +111,19 @@ int PID::getErrorLine() {
             err = -2;
         } 
     }
+
+    if (count2 >= 10000) {
+        // Serial.print("Left = ");
+        // Serial.println(leftReading);
+        // Serial.print("Right = ");
+        // Serial.println(rightReading);
+    }
+
+    Serial.print("Error = ");
+    Serial.println(error);
+        
+    count2++;
+    
 
     // Low pass filter
     if(abs(lastError - err) >= 2){

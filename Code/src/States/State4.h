@@ -5,7 +5,7 @@
 
 class State4 : public State {
     public:
-        State4(State* nextState, PID* pid, Sonar* sonar);
+        State4(State* nextState, PID* pid);
 
         void execute() override;
 

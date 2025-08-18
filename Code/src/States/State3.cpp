@@ -5,29 +5,24 @@ State3::State3(State* nextState, Claw* claw) {
     this->nextState = nextState;
     this->claw = claw;
 
-    timerStart = false;
     moveOn = false;
 }
 
 void State3::execute() {
-    if (!timerStart) {
-        stateStartTime = millis();
-        timerStart = true;
-    }
+    claw->moveClaw(30, 10, 24);
 
-    // bool hallFound = claw->sweepForHall();
+    delay(500);
 
-    if (claw->sweepForHall()) {
-        claw->clamp();
-        moveOn = true;
-    } else if (millis() - stateStartTime > PET_TIMEOUT) {
-        moveOn = true;
-    }
+    claw->clamp();
+
+    delay(2000);
+
+    moveOn = true;
 }
 
 State* State3::getNextState() {
     if (moveOn) {
-        claw->rampPosition();
+        claw->homeXY();
 
         return this->nextState;
     } else {

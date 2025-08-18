@@ -59,6 +59,10 @@ public:
 
     bool isPillarInFront(int (&readings)[READING_LENGTH]); 
 
+    uint16_t singleMeasurement();
+
+    double petSearchStatic();
+
 private:
     VL53L1X sensor;
     ServoESP &servo;
@@ -67,7 +71,8 @@ private:
     int xshutPin;
     uint8_t address;
 
-    uint16_t singleMeasurement();
+    int risingEdgeCount;
+    double previousDistance;
 
     void medianFilter(const int (&raw)[READING_LENGTH], int (&filtered)[READING_LENGTH]);
     void clampSpikes(int (&data)[READING_LENGTH], int maxStep = 100);

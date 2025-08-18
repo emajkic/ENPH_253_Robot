@@ -67,9 +67,14 @@ public:
     void windowPosition();
 
     /*
-     * Moves claw to it's ramp drop-off position
+     * Moves claw to its ramp drop-off position
      */
     void rampPosition();
+
+    /*
+    * Moves claw to its most stable drive position
+    */
+    void drivePosition();
 
     /*
      * Clamp the pet once hall signal detected
@@ -94,7 +99,6 @@ public:
     bool sweepForHall();
 
     // encoder:
-
     void moveTheta(int theta, int speed); // MAKE THIS PRIVATE AGAIN POST TESTING
 
 private:

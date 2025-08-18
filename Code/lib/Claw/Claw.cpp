@@ -117,10 +117,12 @@ void Claw::homeTheta()
                 currentPos = encoderPos;
             }
 
-            // Serial.println(currentPos);
+            Serial.println(currentPos);
         }
         thetaMotor.stop(); // Stop the servo after homing
     }
+
+    Serial.println("homed");
 }
 
 /*
@@ -146,9 +148,6 @@ void Claw::homeXY()
  */
 void Claw::moveClaw(int x, int y, int theta)
 {
-
-    moveTheta(theta, 10); // speed used in dannys code
-
     // deal with delay
     delay(100);
 
@@ -159,6 +158,8 @@ void Claw::moveClaw(int x, int y, int theta)
     delay(2000); 
 
     servo2.moveServo(angles.at("beta"));
+
+    moveTheta(theta, 10); // speed used in dannys code
 }
 
 /*
@@ -230,11 +231,27 @@ void Claw::rampPosition()
 }
 
 /*
+* Moves claw to its most stable drive position  
+*/
+void Claw::drivePosition() {
+    // clamp();
+    moveTheta(0, 10);
+
+    std::map<std::string, double> angles = getAngles(X_DRIVE, Y_DRIVE);
+
+    servo1.moveServo(angles.at("alpha"));
+
+    delay(1000); 
+
+    servo2.moveServo(angles.at("beta"));
+}
+
+/*
  * Clamp the pet once hall signal detected
  */
 void Claw::clamp()
 {
-    clampMotor.moveServo(10);
+    clampMotor.moveServo(90);
 }
 
 /*
@@ -242,7 +259,7 @@ void Claw::clamp()
  */
 void Claw::unclamp()
 {
-    clampMotor.moveServo(90);
+    clampMotor.moveServo(0);
 }
 
 bool Claw::readHall()
