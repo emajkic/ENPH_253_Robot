@@ -255,7 +255,7 @@ void Claw::clamp()
 }
 
 /*
- * Unclamp the pet once the claw has reached the basket
+ * Unclamp the pet 
  */
 void Claw::unclamp()
 {
